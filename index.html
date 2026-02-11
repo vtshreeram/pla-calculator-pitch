@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Lens AI - ROI Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Patient Lens AI</h1>
+            <p>Discharge Automation Impact Analysis</p>
+        </header>
+
+        <!-- Progress Steps -->
+        <div class="progress-container">
+            <div class="progress-dot active" onclick="changeScreen(1)"></div>
+            <div class="progress-dot" onclick="changeScreen(2)"></div>
+            <div class="progress-dot" onclick="changeScreen(3)"></div>
+            <div class="progress-dot" onclick="changeScreen(4)"></div>
+        </div>
+
+        <!-- SCREEN 1: Input -->
+        <div class="screen active" id="screen1">
+            <div class="grid-2">
+                <div class="card">
+                    <h2 class="screen-title">Hospital Parameters</h2>
+
+                    <div class="form-group">
+                        <label for="hospitalName">Hospital Name</label>
+                        <input type="text" id="hospitalName" value="Apollo Specialty Hospital">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numBeds">Number of Beds</label>
+                        <input type="number" id="numBeds" value="200" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dailyDischarges">Daily Discharges</label>
+                        <input type="number" id="dailyDischarges" value="5" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numMTs">Medical Transcribers (MTs)</label>
+                        <input type="number" id="numMTs" value="3" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="staffCostInput">Avg Staff Cost per Month (₹)</label>
+                        <input type="number" id="staffCostInput" value="30000" step="1000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dischargeTime">Avg Discharge Time (Hours)</label>
+                        <select id="dischargeTime">
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3" selected>3 hours</option>
+                            <option value="4">4 hours</option>
+                            <option value="5">5 hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="output-grid">
+                    <div class="stat-card">
+                        <h3>Monthly Discharges</h3>
+                        <div class="value" id="monthlyDischarges">150</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Staff Hours Spent</h3>
+                        <div class="value" id="mtHours">1,350</div>
+                    </div>
+                    <div class="stat-card secondary">
+                        <h3>Staff Payroll Cost</h3>
+                        <div class="value" id="staffCost">₹90k</div>
+                    </div>
+                    <div class="stat-card secondary">
+                        <h3>Revenue Loss</h3>
+                        <div class="value" id="bedRevenueLoss">₹16.8 L</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" data-nav="next">Analyze Costs →</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: Hidden Costs -->
+        <div class="screen" id="screen2">
+            <h2 class="screen-title" style="text-align: center;"><span id="hospitalNameDisplay">Your Hospital</span> -
+                Monthly Logic</h2>
+
+            <div class="cost-grid" style="margin-bottom: 2rem;">
+                <!-- Bed Revenue -->
+                <div class="cost-item">
+                    <div class="icon">🛏️</div>
+                    <h3>Bed Revenue Loss</h3>
+                    <div class="amount" id="costBedRevenue">₹16.88 L</div>
+                    <p style="font-size: 0.85rem; color: #666;">
+                        <strong id="valBedHours">450</strong> bed-hours blocked.<br>
+                        <strong id="valBedDays">18.75</strong> bed-days lost.
+                    </p>
+                </div>
+
+                <!-- Staff Waste -->
+                <div class="cost-item">
+                    <div class="icon">👥</div>
+                    <h3>Staff Efficiency Gap</h3>
+                    <div class="amount" id="costStaff">₹90,000</div>
+                    <p style="font-size: 0.85rem; color: #666;">
+                        <strong id="valMtHours">1,350</strong> hours manually typing.<br>
+                        <strong id="valNumMTs">3</strong> FTEs occupied.
+                    </p>
+                </div>
+
+                <!-- Billing -->
+                <div class="cost-item">
+                    <div class="icon">📉</div>
+                    <h3>Billing Delay Impact</h3>
+                    <div class="amount" id="costBilling">₹18,750</div>
+                    <p style="font-size: 0.85rem; color: #666;">Working capital interest impact due to 2-3 day delay.
+                    </p>
+                </div>
+
+                <!-- Reputation -->
+                <div class="cost-item">
+                    <div class="icon">⭐</div>
+                    <h3>Patient Reputation</h3>
+                    <div class="amount" style="color: var(--warning-color); font-size: 1.2rem;">Unknown</div>
+                    <p style="font-size: 0.85rem; color: #666;">Decreased retention due to long wait times.</p>
+                </div>
+            </div>
+
+            <div class="total-cost-header">
+                <h3 style="margin-bottom: 0.5rem; opacity: 0.9;">TOTAL MONTHLY DRAIN</h3>
+                <div style="font-size: 2.5rem; font-weight: 800;" id="totalMonthlyCost">₹21 L</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" data-nav="prev">Back</button>
+                <button class="btn btn-primary" data-nav="next">See Transformation →</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: Comparisons -->
+        <div class="screen" id="screen3">
+            <h2 class="screen-title" style="text-align: center;">The Transformation</h2>
+
+            <div class="comparison-container">
+                <div class="before-panel">
+                    <h3 style="color: var(--danger-color); margin-bottom: 1.5rem;">❌ Current Process</h3>
+
+                    <div class="metric-row">
+                        <span class="metric-label">Processing Time</span>
+                        <span class="metric-val val-bad" id="beforeTime">3 hr</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Staff Cost</span>
+                        <span class="metric-val val-bad" id="beforeStaff">₹90k</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Bed Revenue Loss</span>
+                        <span class="metric-val val-bad" id="beforeRevenue">₹16.8L</span>
+                    </div>
+                    <div class="metric-row"
+                        style="border-bottom: none; border-top: 1px solid #E5E7EB; margin-top: 1rem;">
+                        <span class="metric-label" style="font-weight: 600;">Total Monthly Cost</span>
+                        <span class="metric-val val-bad" id="beforeTotal">₹17.9L</span>
+                    </div>
+                </div>
+
+                <div class="after-panel">
+                    <h3 style="color: var(--success-color); margin-bottom: 1.5rem;">✅ With Patient Lens AI</h3>
+
+                    <div class="metric-row">
+                        <span class="metric-label">Processing Time</span>
+                        <span class="metric-val val-good">10 min</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Staff Cost (Review)</span>
+                        <span class="metric-val val-good">~10% of Current</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Bed Revenue Loss</span>
+                        <span class="metric-val val-good">₹0</span>
+                    </div>
+
+                    <div class="metric-row"
+                        style="border-bottom: none; border-top: 1px solid #10B981; margin-top: 1rem;">
+                        <span class="metric-label" style="font-weight: 600;">AI Cost</span>
+                        <span class="metric-val" style="color: var(--primary-color);" id="afterCost">₹15k</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roi-banner">
+                <h2 style="font-size: 1rem; opacity: 0.9; margin-bottom: 0.5rem;">NET MONTHLY SAVINGS</h2>
+                <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;" id="netSavings">₹17 L</div>
+                <div
+                    style="background: rgba(255,255,255,0.2); display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem;">
+                    ROI: <span id="roiValue">100X</span> | 5-Year: <span id="fiveYearSavings">₹10 Cr</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" data-nav="prev">Back</button>
+                <button class="btn btn-primary" data-nav="next">See Impact →</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: Impact -->
+        <div class="screen" id="screen4">
+            <h2 class="screen-title" style="text-align: center;">Business Impact</h2>
+
+            <div class="impact-grid">
+                <div class="impact-box">
+                    <div style="font-size: 2rem;">😊</div>
+                    <span class="impact-val">+1.2 ★</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Google Rating</span>
+                </div>
+                <div class="impact-box">
+                    <div style="font-size: 2rem;">⚡</div>
+                    <span class="impact-val">95%</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Faster Discharge</span>
+                </div>
+                <div class="impact-box">
+                    <div style="font-size: 2rem;">🏆</div>
+                    <span class="impact-val">Premium</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Brand Image</span>
+                </div>
+                <div class="impact-box">
+                    <div style="font-size: 2rem;">💰</div>
+                    <span class="impact-val">+6%</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Bed Occupancy</span>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 2rem; background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow-card);">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem; text-align: center;">How It Works</h3>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-weight: 700; color: var(--text-primary);">1. SNAP</div>
+                        <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Scan discharge summary manually
+                        </p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-weight: 700; color: var(--text-primary);">2. AI EXTRACT</div>
+                        <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Gemini OCR reads handwriting</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-weight: 700; color: var(--text-primary);">3. DELIVER</div>
+                        <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Sent to Patient WhatsApp
+                            instantly</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" data-nav="prev">Back</button>
+                <button class="btn btn-primary" onclick="alert('Book a Demo!')">Book a Pilot</button>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="fullscreenBtn"
+        style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer;">⛶
+        Fullscreen</button>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
