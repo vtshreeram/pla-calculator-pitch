@@ -91,15 +91,15 @@ function calculateValues() {
     // If 150 discharges * 3 hours = 450 hours. If 3 MTs, 1350 hours? Maybe it means total payroll hours allocated?
     // Let's check `staffCost`: `numMTs * staffCostPerMT`. This is fixed payroll.
     // So `mtHours` is just a metric of "wasted human potential".
-    
+
     // Let's refine the logic to be more realistic but keep the "magnitude" of the pitch.
     // Pitch Logic: "You pay for X MTs, and they spend Y% of time on this."
-    
+
     // Revenue Loss
     const bedHoursBlocked = monthlyDischarges * dischargeTime;
     const bedDaysLost = bedHoursBlocked / 24;
     const bedRevenueLoss = bedDaysLost * 15000; // Average revenue per bed day
-    
+
     // Billing Delay
     const avgBillAmount = 50000;
     const billingDelay = (2 * monthlyDischarges * avgBillAmount * 0.0001); // Cost of capital?
@@ -109,15 +109,15 @@ function calculateValues() {
 
     // ROI / After Scenarios
     const patientLensAICost = monthlyDischarges * 100;
-    
+
     // After: 10 mins (0.166 hours) per discharge
     const afterTimePerDischarge = 10 / 60;
-    const afterMtHours = monthlyDischarges * afterTimePerDischarge; 
-    
+    const afterMtHours = monthlyDischarges * afterTimePerDischarge;
+
     // Staff cost reduction? Usually staff is fixed, but we can say "Value of time saved".
     // Pitch says: "Remaining staff cost... 10% for review".
-    const afterStaffCost = staffCost * 0.1; 
-    
+    const afterStaffCost = staffCost * 0.1;
+
     const netSavings = (bedRevenueLoss + staffCost + billingDelay) - (afterStaffCost + patientLensAICost);
     const roi = Math.round(netSavings / patientLensAICost);
     const fiveYearSavings = netSavings * 60;
@@ -150,10 +150,14 @@ function calculateValues() {
 
 function updateDisplay() {
     // Formatters
-    const fmtCurrency = (val) => '₹' + (val/100000).toFixed(2) + ' L';
-    const fmtCurrencySmall = (val) => '₹' + Math.round(val).toLocaleString('en-IN');
+    const fmtCurrency = (val) => {
+        if (val >= 100000) {
+            return '₹' + (val / 100000).toFixed(2) + ' L';
+        }
+        return '₹' + Math.round(val).toLocaleString('en-IN');
+    };
     const fmtNum = (val) => Math.round(val).toLocaleString('en-IN');
-    
+
     // Screen 1
     safeSetText('monthlyDischarges', hospitalData.monthlyDischarges);
     safeSetText('mtHours', fmtNum(hospitalData.mtHours));
@@ -165,12 +169,12 @@ function updateDisplay() {
     safeSetText('costBedRevenue', fmtCurrency(hospitalData.bedRevenueLoss));
     safeSetText('valBedHours', fmtNum(hospitalData.bedHoursBlocked));
     safeSetText('valBedDays', hospitalData.bedDaysLost.toFixed(1));
-    
+
     safeSetText('costStaff', fmtCurrency(hospitalData.staffCost));
     safeSetText('valMtHours', fmtNum(hospitalData.mtHours));
     safeSetText('valNumMTs', hospitalData.numMTs);
-    
-    safeSetText('costBilling', fmtCurrencySmall(hospitalData.billingDelay));
+
+    safeSetText('costBilling', fmtCurrency(hospitalData.billingDelay));
     safeSetText('totalMonthlyCost', fmtCurrency(hospitalData.totalMonthlyCost));
 
     // Screen 3
@@ -178,11 +182,13 @@ function updateDisplay() {
     safeSetText('beforeStaff', fmtCurrency(hospitalData.staffCost).replace(' L', 'L'));
     safeSetText('beforeRevenue', fmtCurrency(hospitalData.bedRevenueLoss).replace(' L', 'L'));
     safeSetText('beforeTotal', fmtCurrency(hospitalData.totalMonthlyCost).replace(' L', 'L'));
-    
-    safeSetText('afterCost', '₹' + (hospitalData.patientLensAICost/1000).toFixed(1) + 'k');
+
+    safeSetText('costBilling', fmtCurrency(hospitalData.billingDelay));
+
+    safeSetText('afterCost', fmtCurrency(hospitalData.patientLensAICost));
     safeSetText('netSavings', fmtCurrency(hospitalData.netSavings));
     safeSetText('roiValue', hospitalData.roi + 'X');
-    safeSetText('fiveYearSavings', '₹' + (hospitalData.fiveYearSavings/10000000).toFixed(2) + ' Cr');
+    safeSetText('fiveYearSavings', '₹' + (hospitalData.fiveYearSavings / 10000000).toFixed(2) + ' Cr');
 }
 
 function safeSetText(id, val) {
