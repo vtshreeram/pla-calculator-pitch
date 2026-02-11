@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Lens AI - ROI Calculator (Presentation Mode)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 20px 0 10px 0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .screen {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            margin: 0 40px 20px 40px;
+            padding: 30px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.4s ease-in;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .screen-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Screen 1 - Input/Output Grid */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .input-section, .output-section {
+            padding: 15px;
+        }
+
+        .input-section {
+            border-right: 2px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .output-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .output-card h3 {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .output-card .value {
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        /* Screen 2 - Hidden Costs */
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cost-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .cost-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .cost-card h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .cost-card .amount {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        .cost-card .description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .total-cost {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .total-cost h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .total-cost .monthly {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        /* Screen 3 - Transformation */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-column {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .before-column {
+            background: #fee;
+            border: 2px solid #e74c3c;
+        }
+
+        .after-column {
+            background: #efe;
+            border: 2px solid #27ae60;
+        }
+
+        .comparison-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .before-column h3 {
+            color: #e74c3c;
+        }
+
+        .after-column h3 {
+            color: #27ae60;
+        }
+
+        .metric {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .before-column .metric-value {
+            color: #e74c3c;
+        }
+
+        .after-column .metric-value {
+            color: #27ae60;
+        }
+
+        .improvement {
+            font-size: 0.85rem;
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .roi-banner {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .roi-banner h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .roi-banner .roi-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        /* Screen 4 - Impact & How It Works */
+        .split-screen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .impact-section, .workflow-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .impact-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .impact-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .impact-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .impact-card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .impact-card .stat {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .workflow {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+        }
+
+        .workflow h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .workflow-step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .workflow-step h4 {
+            font-size: 1rem;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .workflow-step p {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .time-highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .time-highlight h3 {
+            color: #856404;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .time-highlight .big-time {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        /* Navigation */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .progress-dot:hover {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    <div class="keyboard-hint">← → Arrow keys or buttons to navigate</div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Patient Lens AI - ROI Calculator</h1>
+            <p>Discharge Automation Impact Analysis</p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-dot active" onclick="goToScreen(1)"></div>
+            <div class="progress-dot" onclick="goToScreen(2)"></div>
+            <div class="progress-dot" onclick="goToScreen(3)"></div>
+            <div class="progress-dot" onclick="goToScreen(4)"></div>
+        </div>
+
+        <!-- Screen 1: Your Hospital Snapshot -->
+        <div class="screen active" id="screen1">
+            <h2 class="screen-title">Your Hospital Snapshot</h2>
+            
+            <div class="screen-content">
+                <div class="two-column">
+                    <!-- Left: Inputs -->
+                    <div class="input-section">
+                        <div class="form-group">
+                            <label for="hospitalName">Hospital Name</label>
+                            <input type="text" id="hospitalName" placeholder="Enter hospital name" value="Apollo Specialty Hospital">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numBeds">Number of Beds</label>
+                            <input type="number" id="numBeds" placeholder="Enter number" value="200" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dailyDischarges">Daily Discharges</label>
+                            <input type="number" id="dailyDischarges" placeholder="Enter number" value="5" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numMTs">Medical Transcribers (MTs)</label>
+                            <input type="number" id="numMTs" placeholder="Enter number" value="3" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffCostInput">Avg Staff Cost per Month (₹)</label>
+                            <input type="number" id="staffCostInput" placeholder="Enter amount" value="30000" min="1000" step="1000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dischargeTime">Avg Discharge Time</label>
+                            <select id="dischargeTime" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; cursor: pointer;">
+                                <option value="0.5">30 minutes</option>
+                                <option value="1">1 hour</option>
+                                <option value="1.5">1.5 hours</option>
+                                <option value="2">2 hours</option>
+                                <option value="3" selected>3 hours</option>
+                                <option value="4">4 hours</option>
+                                <option value="5">5 hours</option>
+                                <option value="6">6+ hours</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Outputs -->
+                    <div class="output-section">
+                        <div class="output-card">
+                            <h3>Monthly Discharges</h3>
+                            <div class="value" id="monthlyDischarges">150</div>
+                        </div>
+
+                        <div class="output-card">
+                            <h3>MT Hours Spent/Month</h3>
+                            <div class="value" id="mtHours">1,350</div>
+                        </div>
+
+                        <div class="output-card">
+                            <h3>Staff Cost/Month</h3>
+                            <div class="value" id="staffCost">₹4,05,000</div>
+                        </div>
+
+                        <div class="output-card">
+                            <h3>Bed Revenue Loss/Month</h3>
+                            <div class="value" id="bedRevenueLoss">₹16,87,500</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="nextScreen()">Next: See Hidden Costs →</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: The Hidden Cost -->
+        <div class="screen" id="screen2">
+            <h2 class="screen-title"><span id="hospitalNameDisplay">Your Hospital</span> - Current Discharge Costs</h2>
+            
+            <div class="screen-content">
+                <div class="cost-grid">
+                    <div class="cost-card">
+                        <div class="icon">💰</div>
+                        <h3>Bed Revenue Loss</h3>
+                        <div class="amount" id="cost1">₹16.88 L</div>
+                        <p class="description">
+                            <strong id="bedHoursBlocked">450</strong> bed-hours blocked/month<br>
+                            = <strong id="bedDaysLost">18.75</strong> bed-days lost
+                        </p>
+                    </div>
+
+                    <div class="cost-card">
+                        <div class="icon">⏱️</div>
+                        <h3>MT Time Waste</h3>
+                        <div class="amount" id="cost2">₹4.05 L</div>
+                        <p class="description">
+                            <strong id="mtHoursDisplay">1,350</strong> MT hours/month<br>
+                            <strong id="numMTsDisplay">3</strong> MTs on manual entry
+                        </p>
+                    </div>
+
+                    <div class="cost-card">
+                        <div class="icon">😤</div>
+                        <h3>Patient Complaints</h3>
+                        <div class="amount">~40/month</div>
+                        <p class="description">
+                            Long discharge waits<br>
+                            Retention impact: -15-20%
+                        </p>
+                    </div>
+
+                    <div class="cost-card">
+                        <div class="icon">💳</div>
+                        <h3>Billing Delays</h3>
+                        <div class="amount" id="cost4">₹18,750</div>
+                        <p class="description">
+                            2-3 days to invoice<br>
+                            Working capital cost
+                        </p>
+                    </div>
+                </div>
+
+                <div class="total-cost">
+                    <h2>TOTAL MONTHLY COST</h2>
+                    <div class="monthly" id="totalMonthlyCost">₹21,11,250</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevScreen()">← Back</button>
+                <button class="btn btn-primary" onclick="nextScreen()">Next: See Transformation →</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: The Transformation -->
+        <div class="screen" id="screen3">
+            <h2 class="screen-title">WITH PATIENT LENS AI - The Transformation</h2>
+
+            <div class="screen-content">
+                <div class="comparison-grid">
+                    <!-- Before Column -->
+                    <div class="comparison-column before-column">
+                        <h3>❌ WITHOUT</h3>
+                        
+                        <div class="metric">
+                            <div class="metric-label">Processing Time</div>
+                            <div class="metric-value" id="beforeDischargeTime">3 hours</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">MT Hours/Month</div>
+                            <div class="metric-value" id="beforeHours">1,350 hrs</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">Staff Cost</div>
+                            <div class="metric-value" id="beforeStaffCost">₹4.05 L</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">Bed Revenue Loss</div>
+                            <div class="metric-value" id="beforeRevenueLoss">₹16.88 L</div>
+                        </div>
+
+                        <div style="padding-top: 15px; border-top: 2px solid #e74c3c; margin-top: 15px;">
+                            <div class="metric-label">TOTAL COST</div>
+                            <div class="metric-value" id="beforeTotalCost">₹21.11 L/mo</div>
+                        </div>
+                    </div>
+
+                    <!-- After Column -->
+                    <div class="comparison-column after-column">
+                        <h3>✅ WITH PATIENT LENS AI</h3>
+                        
+                        <div class="metric">
+                            <div class="metric-label">Processing Time</div>
+                            <div class="metric-value">10 minutes</div>
+                            <div class="improvement">⚡ 95% faster</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">MT Hours/Month</div>
+                            <div class="metric-value">112.5 hrs</div>
+                            <div class="improvement">⚡ 1,237.5 hrs saved</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">Staff Cost</div>
+                            <div class="metric-value">₹33,750</div>
+                            <div class="improvement">💰 ₹3.71 L saved</div>
+                        </div>
+
+                        <div class="metric">
+                            <div class="metric-label">Bed Revenue Loss</div>
+                            <div class="metric-value">₹0</div>
+                            <div class="improvement">💰 ₹16.88 L recovered</div>
+                        </div>
+
+                        <div style="padding-top: 15px; border-top: 2px solid #27ae60; margin-top: 15px;">
+                            <div class="metric-label">AI COST</div>
+                            <div class="metric-value" id="afterCost">₹15k/mo</div>
+                            <div class="improvement" style="font-size: 1rem;">NET SAVE: <span id="netSavings">₹20.96 L</span>/mo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roi-banner">
+                    <h2>Return on Investment</h2>
+                    <div class="roi-value" id="roiValue">140X</div>
+                    <p style="margin-top: 8px;">ROI in Month 1 | 5-Year Savings: <span id="fiveYearSavings">₹12.58 Cr</span></p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevScreen()">← Back</button>
+                <button class="btn btn-primary" onclick="nextScreen()">Next: Impact & How It Works →</button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Impact & How It Works -->
+        <div class="screen" id="screen4">
+            <h2 class="screen-title">The Complete Impact</h2>
+
+            <div class="screen-content">
+                <div class="split-screen">
+                    <!-- Left: Impact -->
+                    <div class="impact-section">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">Business Impact</h3>
+                        
+                        <div class="impact-cards">
+                            <div class="impact-card">
+                                <div class="icon">⭐</div>
+                                <h3>Google Rating</h3>
+                                <div class="stat">+1.2 ★</div>
+                            </div>
+
+                            <div class="impact-card">
+                                <div class="icon">😊</div>
+                                <h3>Patient Satisfaction</h3>
+                                <div class="stat">87% ↑</div>
+                            </div>
+
+                            <div class="impact-card">
+                                <div class="icon">🏆</div>
+                                <h3>Modern Image</h3>
+                                <div class="stat">Premium</div>
+                            </div>
+
+                            <div class="impact-card">
+                                <div class="icon">📢</div>
+                                <h3>Word-of-Mouth</h3>
+                                <div class="stat">+20%</div>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                            <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem;">Why Patients Love It</h4>
+                            <ul style="color: #666; font-size: 0.9rem; line-height: 1.8; padding-left: 20px;">
+                                <li>Instant digital summary on WhatsApp</li>
+                                <li>No 3-hour waiting after clearance</li>
+                                <li>Hospital feels modern & efficient</li>
+                                <li>Share results easily with family</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: How It Works -->
+                    <div class="workflow-section">
+                        <div class="workflow">
+                            <h3>How Patient Lens AI Works</h3>
+                            
+                            <div class="workflow-steps">
+                                <div class="workflow-step">
+                                    <h4>📸 CAPTURE (2 min)</h4>
+                                    <p>Staff scans handwritten discharge summary on any phone/scanner</p>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <h4>🤖 AI READS (3 min)</h4>
+                                    <p>Gemini OCR extracts all data: diagnosis, meds, instructions, follow-up</p>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <h4>👨‍⚕️ REVIEW (4 min)</h4>
+                                    <p>Staff reviews & approves (90% accuracy, minimal edits needed)</p>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <h4>✅ DELIVER (1 min)</h4>
+                                    <p>Auto-sent to patient's WhatsApp/email + billing system + archive</p>
+                                </div>
+                            </div>
+
+                            <div class="time-highlight">
+                                <h3>TOTAL TIME</h3>
+                                <div class="big-time">10 MINUTES</div>
+                                <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">(vs 3 hours manual)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevScreen()">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data object
+        let hospitalData = {
+            name: 'Apollo Specialty Hospital',
+            beds: 200,
+            dailyDischarges: 5,
+            numMTs: 3,
+            staffCostPerMT: 30000,
+            dischargeTimeHours: 3,
+            monthlyDischarges: 150,
+            mtHours: 1350,
+            staffCost: 90000,
+            bedRevenueLoss: 1687500,
+            billingDelay: 18750,
+            totalMonthlyCost: 1796250,
+            patientLensAICost: 15000,
+            netSavings: 1772250,
+            roi: 118
+        };
+
+        let currentScreen = 1;
+
+        // Calculate values
+        function calculateValues() {
+            const beds = parseInt(document.getElementById('numBeds').value) || 0;
+            const dailyDischarges = parseInt(document.getElementById('dailyDischarges').value) || 0;
+            const numMTs = parseInt(document.getElementById('numMTs').value) || 0;
+            const staffCostPerMT = parseInt(document.getElementById('staffCostInput').value) || 30000;
+            const dischargeTime = parseFloat(document.getElementById('dischargeTime').value) || 3;
+            const name = document.getElementById('hospitalName').value || 'Your Hospital';
+
+            // Calculations
+            const monthlyDischarges = dailyDischarges * 30;
+            const mtHours = monthlyDischarges * dischargeTime * numMTs; // Each MT works on each discharge
+            const staffCost = staffCostPerMT * numMTs; // Total monthly cost for all MTs
+            
+            const bedHoursBlocked = monthlyDischarges * dischargeTime;
+            const bedDaysLost = bedHoursBlocked / 24;
+            const bedRevenueLoss = bedDaysLost * 15000;
+            
+            const avgBillAmount = 50000;
+            const billingDelay = (2 * monthlyDischarges * avgBillAmount * 0.0001);
+            
+            const totalMonthlyCost = bedRevenueLoss + staffCost + billingDelay;
+            
+            const patientLensAICost = monthlyDischarges * 100;
+            const afterMtHours = monthlyDischarges * (10/60) * numMTs; // 10 min per discharge
+            const afterStaffCost = (staffCostPerMT * numMTs) * 0.1; // Assume 10% of time still needed for review
+            const netSavings = (bedRevenueLoss + staffCost - afterStaffCost - patientLensAICost);
+            const roi = Math.round(netSavings / patientLensAICost);
+            const fiveYearSavings = netSavings * 60;
+
+            hospitalData = {
+                name,
+                beds,
+                dailyDischarges,
+                numMTs,
+                staffCostPerMT,
+                dischargeTimeHours: dischargeTime,
+                monthlyDischarges,
+                mtHours,
+                staffCost,
+                bedRevenueLoss,
+                bedHoursBlocked,
+                bedDaysLost,
+                billingDelay,
+                totalMonthlyCost,
+                patientLensAICost,
+                afterMtHours,
+                afterStaffCost,
+                netSavings,
+                roi,
+                fiveYearSavings
+            };
+
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            // Screen 1
+            document.getElementById('monthlyDischarges').textContent = hospitalData.monthlyDischarges;
+            document.getElementById('mtHours').textContent = hospitalData.mtHours.toLocaleString('en-IN');
+            document.getElementById('staffCost').textContent = '₹' + (hospitalData.staffCost/100000).toFixed(2) + ' L';
+            document.getElementById('bedRevenueLoss').textContent = '₹' + (hospitalData.bedRevenueLoss/100000).toFixed(2) + ' L';
+
+            // Screen 2
+            document.getElementById('hospitalNameDisplay').textContent = hospitalData.name;
+            document.getElementById('cost1').textContent = '₹' + (hospitalData.bedRevenueLoss/100000).toFixed(2) + ' L';
+            document.getElementById('bedHoursBlocked').textContent = Math.round(hospitalData.bedHoursBlocked);
+            document.getElementById('bedDaysLost').textContent = hospitalData.bedDaysLost.toFixed(1);
+            
+            document.getElementById('cost2').textContent = '₹' + (hospitalData.staffCost/100000).toFixed(2) + ' L';
+            document.getElementById('mtHoursDisplay').textContent = hospitalData.mtHours.toLocaleString('en-IN');
+            document.getElementById('numMTsDisplay').textContent = hospitalData.numMTs;
+            
+            document.getElementById('cost4').textContent = '₹' + Math.round(hospitalData.billingDelay).toLocaleString('en-IN');
+            document.getElementById('totalMonthlyCost').textContent = '₹' + (hospitalData.totalMonthlyCost/100000).toFixed(2) + ' L';
+
+            // Screen 3
+            document.getElementById('beforeDischargeTime').textContent = hospitalData.dischargeTimeHours + ' hours';
+            document.getElementById('beforeHours').textContent = hospitalData.mtHours.toLocaleString('en-IN') + ' hrs';
+            document.getElementById('beforeStaffCost').textContent = '₹' + (hospitalData.staffCost/100000).toFixed(2) + ' L';
+            document.getElementById('beforeRevenueLoss').textContent = '₹' + (hospitalData.bedRevenueLoss/100000).toFixed(2) + ' L';
+            document.getElementById('beforeTotalCost').textContent = '₹' + (hospitalData.totalMonthlyCost/100000).toFixed(2) + ' L/mo';
+            
+            document.getElementById('afterCost').textContent = '₹' + (hospitalData.patientLensAICost/1000).toFixed(0) + 'k/mo';
+            document.getElementById('netSavings').textContent = '₹' + (hospitalData.netSavings/100000).toFixed(2) + ' L';
+            document.getElementById('roiValue').textContent = hospitalData.roi + 'X';
+            document.getElementById('fiveYearSavings').textContent = '₹' + (hospitalData.fiveYearSavings/10000000).toFixed(2) + ' Cr';
+        }
+
+        // Navigation
+        function nextScreen() {
+            if (currentScreen < 4) {
+                document.getElementById(`screen${currentScreen}`).classList.remove('active');
+                currentScreen++;
+                document.getElementById(`screen${currentScreen}`).classList.add('active');
+                updateProgressIndicator();
+            }
+        }
+
+        function prevScreen() {
+            if (currentScreen > 1) {
+                document.getElementById(`screen${currentScreen}`).classList.remove('active');
+                currentScreen--;
+                document.getElementById(`screen${currentScreen}`).classList.add('active');
+                updateProgressIndicator();
+            }
+        }
+
+        function goToScreen(screenNum) {
+            document.getElementById(`screen${currentScreen}`).classList.remove('active');
+            currentScreen = screenNum;
+            document.getElementById(`screen${currentScreen}`).classList.add('active');
+            updateProgressIndicator();
+        }
+
+        function updateProgressIndicator() {
+            document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+                if (index + 1 <= currentScreen) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextScreen();
+            } else if (e.key === 'ArrowLeft') {
+                prevScreen();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Event listeners
+        document.getElementById('numBeds').addEventListener('input', calculateValues);
+        document.getElementById('dailyDischarges').addEventListener('input', calculateValues);
+        document.getElementById('numMTs').addEventListener('input', calculateValues);
+        document.getElementById('staffCostInput').addEventListener('input', calculateValues);
+        document.getElementById('dischargeTime').addEventListener('change', calculateValues);
+        document.getElementById('hospitalName').addEventListener('input', calculateValues);
+
+        // Initialize
+        calculateValues();
+    </script>
+</body>
+</html>
