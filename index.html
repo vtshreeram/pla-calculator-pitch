@@ -22,7 +22,8 @@
                 <p>See exactly how much the "4-Hour Gap" costs your hospital.</p>
             </header>
 
-            <section class="config-section" id="sec-inputs">
+            <!-- STEP 1: INPUTS -->
+            <section class="config-section active-step" id="sec-inputs">
                 <h2>1. Hospital Snapshot</h2>
                 <p class="section-desc">Enter your current metrics to establish a baseline.</p>
 
@@ -61,9 +62,14 @@
                         <input type="number" id="staffCostInput" value="30000" step="1000">
                     </div>
                 </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary-lg" id="btnRevealCosts">Analyze Monthly Drain ⬇</button>
+                </div>
             </section>
 
-            <section class="config-section" id="sec-hidden-costs">
+            <!-- STEP 2: HIDDEN COSTS (Initially Hidden) -->
+            <section class="config-section hidden-step" id="sec-hidden-costs">
                 <h2>2. The Hidden Drain</h2>
                 <p class="section-desc">What this inefficiency actually costs you every month.</p>
 
@@ -89,9 +95,14 @@
                         <p>Working capital interest Cost impact.</p>
                     </div>
                 </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary-lg" id="btnRevealTransform">Show The Fix ⬇</button>
+                </div>
             </section>
 
-            <section class="config-section" id="sec-transformation">
+            <!-- STEP 3: TRANSFORMATION (Initially Hidden) -->
+            <section class="config-section hidden-step" id="sec-transformation">
                 <h2>3. The Transformation</h2>
                 <p class="section-desc">With Patient Lens AI (10 min processing).</p>
 
@@ -119,7 +130,9 @@
                 <div class="cta-box">
                     <h3>Ready to fix this?</h3>
                     <p>Stop losing <span id="txtMonthlyDrain">₹17 L</span> every month.</p>
-                    <button class="btn-primary-lg" onclick="window.scrollTo(0,0)">Recalculate</button>
+                    <button class="btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Modify
+                        Inputs</button>
+                    <button class="btn-primary-lg" onclick="alert('Book a Demo!')">Book a Pilot</button>
                 </div>
             </section>
         </main>
@@ -130,9 +143,10 @@
                 <h3>Live Impact Analysis</h3>
 
                 <div class="dashboard-metric primary">
-                    <span class="metric-label">Net Monthly Savings</span>
-                    <span class="metric-value" id="dashNetSavings">₹17.7 L</span>
-                    <span class="metric-sub">ROI: <span id="dashRoi">118X</span></span>
+                    <span class="metric-label" id="labelMainMetric">Monthly Drain</span>
+                    <!-- Initial state: showing Loss (Red) -->
+                    <span class="metric-value bad" id="dashMainValue">₹17.9 L</span>
+                    <span class="metric-sub" id="dashSubMetric">ROI: <span id="dashRoi">--</span></span>
                 </div>
 
                 <div class="mini-metrics">
@@ -146,7 +160,7 @@
                     </div>
                 </div>
 
-                <div class="chart-box">
+                <div class="chart-box hidden-step" id="boxFiveYear">
                     <h4>5-Year Projected Savings</h4>
                     <div class="big-number" id="dashFiveYear">₹10.6 Cr</div>
                 </div>

@@ -18,17 +18,16 @@ let hospitalData = {
     fiveYearSavings: 100000000
 };
 
+// UI State
+let currentStage = 0; // 0: Input, 1: Hidden Costs, 2: Transformation
+
 document.addEventListener('DOMContentLoaded', () => {
     bindInputs();
+    bindActions();
     calculateAndRender();
 });
 
 function bindInputs() {
-    // List of input IDs to listen to
-    const numericInputs = ['monthlyDischargesInput', 'numMTs', 'staffCostInput']; // Note: Changed daily -> monthly input directly for simplicity in split panel, or calculate?
-    // In HTML I put 'monthlyDischargesInput' and 'dailyDischarges' desc. Let's sync.
-    // HTML has: id="monthlyDischargesInput" value="150"
-
     document.getElementById('monthlyDischargesInput').addEventListener('input', calculateAndRender);
     document.getElementById('dischargeTime').addEventListener('change', calculateAndRender);
     document.getElementById('numMTs').addEventListener('input', calculateAndRender);
@@ -38,39 +37,60 @@ function bindInputs() {
     });
 }
 
+function bindActions() {
+    document.getElementById('btnRevealCosts').addEventListener('click', () => {
+        currentStage = 1;
+        revealSection('sec-hidden-costs');
+        // Hide button after click? No, keep it as navigation anchor or hide it.
+        document.getElementById('btnRevealCosts').style.display = 'none';
+        updateUI();
+    });
+
+    document.getElementById('btnRevealTransform').addEventListener('click', () => {
+        currentStage = 2;
+        revealSection('sec-transformation');
+        document.getElementById('btnRevealTransform').style.display = 'none';
+        updateUI();
+    });
+}
+
+function revealSection(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('hidden-step');
+    el.classList.add('visible-step');
+
+    // Smooth scroll to it
+    setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
 function calculateAndRender() {
-    // 1. Gather Inputs
     const monthlyDischarges = parseInt(document.getElementById('monthlyDischargesInput').value) || 150;
     const dischargeTime = parseFloat(document.getElementById('dischargeTime').value) || 3;
     const numMTs = parseInt(document.getElementById('numMTs').value) || 3;
     const staffCostPerMT = parseInt(document.getElementById('staffCostInput').value) || 30000;
 
-    // 2. Logic (Audit against KT)
-
-    // Revenue Loss: (Discharges * Hours) / 24 * 15k
+    // Logic
     const bedHoursBlocked = monthlyDischarges * dischargeTime;
     const bedDaysLost = bedHoursBlocked / 24;
     const bedRevenueLoss = bedDaysLost * 15000;
 
-    // Staff Waste: (Fixed Payroll)
     const staffCost = numMTs * staffCostPerMT;
-    const mtHoursWaste = monthlyDischarges * dischargeTime; // Total man-hours consumed
+    const mtHoursWaste = monthlyDischarges * dischargeTime;
 
-    // Billing Delay: (2 days * Discharges * 50k * 0.01%)
     const avgBill = 50000;
     const billingDelay = (2 * monthlyDischarges * avgBill * 0.0001);
 
     const totalBefore = bedRevenueLoss + staffCost + billingDelay;
 
-    // Transformation (With AI)
     const aiCost = monthlyDischarges * 100;
-    const staffCostAfter = staffCost * 0.1; // 10% needed for review
+    const staffCostAfter = staffCost * 0.1;
 
     const netSavings = (totalBefore) - (staffCostAfter + aiCost);
     const roi = Math.round(netSavings / aiCost);
     const fiveYear = netSavings * 60;
 
-    // 3. Update State
     hospitalData = {
         ...hospitalData,
         monthlyDischarges,
@@ -86,40 +106,63 @@ function calculateAndRender() {
         mtHoursWaste
     };
 
-    // 4. Render
     updateUI();
 }
 
 function updateUI() {
-    // Formatters
     const fmt = (val) => {
         if (val >= 100000) return '₹' + (val / 100000).toFixed(2) + ' L';
         return '₹' + Math.round(val).toLocaleString('en-IN');
     };
     const num = (val) => Math.round(val).toLocaleString('en-IN');
 
-    // === LEFT PANEL ===
-    // Hidden Costs
+    // Left Panel Checks
     setText('dispBedLoss', fmt(hospitalData.bedRevenueLoss));
     setText('dispBedDays', hospitalData.bedDaysLost.toFixed(1));
-
     setText('dispStaffLoss', fmt(hospitalData.staffCost));
-    setText('dispMtHours', num(hospitalData.mtHoursWaste)); // approx hours
-
+    setText('dispMtHours', num(hospitalData.mtHoursWaste));
     setText('dispBillingLoss', fmt(hospitalData.billingDelay));
-
-    // Transformation
     setText('oldRevLoss', fmt(hospitalData.bedRevenueLoss));
     setText('txtMonthlyDrain', fmt(hospitalData.totalCost));
 
-    // === RIGHT PANEL (Dashboard) ===
-    setText('dashNetSavings', fmt(hospitalData.netSavings));
-    setText('dashRoi', hospitalData.roi + 'X');
+    // Right Panel (State Dependent)
+    const mainLabel = document.getElementById('labelMainMetric');
+    const mainVal = document.getElementById('dashMainValue');
+    const roiContainer = document.getElementById('dashSubMetric');
+    const fiveYearBox = document.getElementById('boxFiveYear');
 
+    if (currentStage === 0) {
+        // Stage 0: Preview Mode
+        mainLabel.textContent = "Potential Drain";
+        mainVal.textContent = fmt(hospitalData.totalCost);
+        mainVal.className = "metric-value bad";
+        roiContainer.style.opacity = '0';
+        fiveYearBox.classList.add('hidden-step');
+
+    } else if (currentStage === 1) {
+        // Stage 1: Problem Realization
+        mainLabel.textContent = "Monthly Loss";
+        mainVal.textContent = fmt(hospitalData.totalCost);
+        mainVal.className = "metric-value bad"; // Emphasize RED
+        roiContainer.style.opacity = '0';
+        fiveYearBox.classList.add('hidden-step');
+
+    } else if (currentStage === 2) {
+        // Stage 2: Solution
+        mainLabel.textContent = "Monthly Savings";
+        mainVal.textContent = fmt(hospitalData.netSavings);
+        mainVal.className = "metric-value good"; // Switch to WHITE/GREEN
+        roiContainer.style.opacity = '1';
+        setText('dashRoi', hospitalData.roi + 'X');
+
+        fiveYearBox.classList.remove('hidden-step');
+        fiveYearBox.classList.add('visible-step');
+        setText('dashFiveYear', '₹' + (hospitalData.fiveYearSavings / 10000000).toFixed(2) + ' Cr');
+    }
+
+    // Always visible metrics
     setText('dashTotalCost', fmt(hospitalData.totalCost));
     setText('dashAiCost', '₹' + (hospitalData.aiCost / 1000).toFixed(1) + ' k');
-
-    setText('dashFiveYear', '₹' + (hospitalData.fiveYearSavings / 10000000).toFixed(2) + ' Cr');
     setText('dashDischarges', hospitalData.monthlyDischarges);
 }
 
