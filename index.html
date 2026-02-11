@@ -14,175 +14,177 @@
 <body>
 
     <div class="app-container">
-        <!-- LEFT PANEL: Presentation Deck -->
-        <main class="story-panel">
-            <header class="app-header">
-                <div class="logo">🏥 Patient Lens AI</div>
-                <h1>Discharge ROI Configurator</h1>
-                <!-- Progress Dots -->
-                <div class="progress-container">
-                    <div class="dot active" data-step="0"></div>
-                    <div class="dot" data-step="1"></div>
-                    <div class="dot" data-step="2"></div>
-                </div>
-            </header>
-
-            <div class="slider-wrapper">
-                <!-- SLIDE 1: INPUTS -->
-                <section class="slide active-slide" id="slide-0">
-                    <h2>1. Hospital Snapshot</h2>
-                    <p class="section-desc">Enter your current metrics to establish a baseline.</p>
-
-                    <div class="input-group">
-                        <label>Hospital Name</label>
-                        <input type="text" id="hospitalName" value="Apollo Specialty Hospital">
-                    </div>
-
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label>Monthly Discharges</label>
-                            <input type="number" id="monthlyDischargesInput" value="150" min="1">
-                            <span class="hint">Approx 5/day</span>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Avg Discharge Time</label>
-                            <select id="dischargeTime">
-                                <option value="1">1 hour</option>
-                                <option value="2">2 hours</option>
-                                <option value="3" selected>3 hours</option>
-                                <option value="4">4 hours</option>
-                                <option value="5">5 hours</option>
-                            </select>
-                            <span class="hint">Time from doctor clearance to patient exit</span>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Medical Transcribers</label>
-                            <input type="number" id="numMTs" value="3" min="1">
-                            <span class="hint">Staff handling summaries</span>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Avg Staff Cost/Mo</label>
-                            <input type="number" id="staffCostInput" value="30000" step="1000">
-                        </div>
-                    </div>
-
-                    <div class="slide-footer">
-                        <button class="btn-primary-lg" onclick="goToSlide(1)">Analyze Impact ➝</button>
-                    </div>
-                </section>
-
-                <!-- SLIDE 2: HIDDEN COSTS -->
-                <section class="slide" id="slide-1">
-                    <h2>2. The Hidden Drain</h2>
-                    <p class="section-desc">What this inefficiency actually costs you every month.</p>
-
-                    <div class="cards-grid">
-                        <div class="info-card danger">
-                            <div class="card-icon">🛏️</div>
-                            <h3>Bed Revenue Loss</h3>
-                            <div class="big-value" id="dispBedLoss">₹16.8 L</div>
-                            <p><span id="dispBedDays">18.7</span> bed-days lost/mo due to blocked beds.</p>
-                        </div>
-
-                        <div class="info-card warning">
-                            <div class="card-icon">👥</div>
-                            <h3>Staff Inefficiency</h3>
-                            <div class="big-value" id="dispStaffLoss">₹90,000</div>
-                            <p><span id="dispMtHours">1,350</span> hours spent on manual typing/review.</p>
-                        </div>
-
-                        <div class="info-card warning">
-                            <div class="card-icon">📉</div>
-                            <h3>Billing Delays</h3>
-                            <div class="big-value" id="dispBillingLoss">₹18,750</div>
-                            <p>Working capital interest Cost impact.</p>
-                        </div>
-                    </div>
-
-                    <div class="slide-footer">
-                        <button class="btn-secondary" onclick="goToSlide(0)">Back</button>
-                        <button class="btn-primary-lg" onclick="goToSlide(2)">Show The Fix ➝</button>
-                    </div>
-                </section>
-
-                <!-- SLIDE 3: TRANSFORMATION -->
-                <section class="slide" id="slide-2">
-                    <h2>3. The Transformation</h2>
-                    <p class="section-desc">With Patient Lens AI (10 min processing).</p>
-
-                    <div class="impact-comparison">
-                        <div class="impact-row">
-                            <div class="label">Processing Time</div>
-                            <div class="val-old">3 Hours</div>
-                            <div class="arrow">➝</div>
-                            <div class="val-new">10 Mins</div>
-                        </div>
-                        <div class="impact-row">
-                            <div class="label">Bed Revenue Loss</div>
-                            <div class="val-old" id="oldRevLoss">₹16.8 L</div>
-                            <div class="arrow">➝</div>
-                            <div class="val-new">₹0</div>
-                        </div>
-                        <div class="impact-row">
-                            <div class="label">Patient Experience</div>
-                            <div class="val-old">Frustrated</div>
-                            <div class="arrow">➝</div>
-                            <div class="val-new">Delighted</div>
-                        </div>
-                    </div>
-
-                    <div class="cta-box">
-                        <h3>Ready to fix this?</h3>
-                        <p>Stop losing <span id="txtMonthlyDrain">₹17 L</span> every month.</p>
-                        <div class="cta-actions">
-                            <button class="btn-secondary" onclick="goToSlide(1)">Back</button>
-                            <button class="btn-primary-lg" onclick="alert('Book a Demo!')">Book a Pilot</button>
-                        </div>
-                        <button class="btn-link" onclick="goToSlide(0)">Recalculate Inputs ↺</button>
-                    </div>
-                </section>
+        <header class="app-header">
+            <div class="logo">🏥 Patient Lens AI</div>
+            <h1>Discharge ROI Configurator</h1>
+            <!-- Progress Dots -->
+            <div class="progress-container">
+                <div class="dot active" data-step="0"></div>
+                <div class="dot" data-step="1"></div>
+                <div class="dot" data-step="2"></div>
             </div>
-        </main>
+        </header>
 
-        <!-- RIGHT PANEL: Sticky Dashboard -->
-        <aside class="dashboard-panel">
-            <div class="sticky-wrapper">
-                <h3>Live Impact Analysis</h3>
+        <div class="main-layout">
+            <!-- LEFT PANEL: Presentation Deck -->
+            <main class="story-panel">
 
-                <div class="dashboard-metric primary">
-                    <span class="metric-label" id="labelMainMetric">Monthly Drain</span>
-                    <span class="metric-value bad" id="dashMainValue">₹17.9 L</span>
-                    <span class="metric-sub" id="dashSubMetric" style="opacity:0">ROI: <span
-                            id="dashRoi">--</span></span>
+                <div class="slider-wrapper">
+                    <!-- SLIDE 1: INPUTS -->
+                    <section class="slide active-slide" id="slide-0">
+                        <h2>1. Hospital Snapshot</h2>
+                        <p class="section-desc">Enter your current metrics to establish a baseline.</p>
+
+                        <div class="input-group">
+                            <label>Hospital Name</label>
+                            <input type="text" id="hospitalName" value="Apollo Specialty Hospital">
+                        </div>
+
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Monthly Discharges</label>
+                                <input type="number" id="monthlyDischargesInput" value="150" min="1">
+                                <span class="hint">Approx 5/day</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Avg Discharge Time</label>
+                                <select id="dischargeTime">
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="3" selected>3 hours</option>
+                                    <option value="4">4 hours</option>
+                                    <option value="5">5 hours</option>
+                                </select>
+                                <span class="hint">Time from doctor clearance to patient exit</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Medical Transcribers</label>
+                                <input type="number" id="numMTs" value="3" min="1">
+                                <span class="hint">Staff handling summaries</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Avg Staff Cost/Mo</label>
+                                <input type="number" id="staffCostInput" value="30000" step="1000">
+                            </div>
+                        </div>
+
+                        <div class="slide-footer">
+                            <button class="btn-primary-lg" onclick="goToSlide(1)">Analyze Impact ➝</button>
+                        </div>
+                    </section>
+
+                    <!-- SLIDE 2: HIDDEN COSTS -->
+                    <section class="slide" id="slide-1">
+                        <h2>2. The Hidden Drain</h2>
+                        <p class="section-desc">What this inefficiency actually costs you every month.</p>
+
+                        <div class="cards-grid">
+                            <div class="info-card danger">
+                                <div class="card-icon">🛏️</div>
+                                <h3>Bed Revenue Loss</h3>
+                                <div class="big-value" id="dispBedLoss">₹16.8 L</div>
+                                <p><span id="dispBedDays">18.7</span> bed-days lost/mo due to blocked beds.</p>
+                            </div>
+
+                            <div class="info-card warning">
+                                <div class="card-icon">👥</div>
+                                <h3>Staff Inefficiency</h3>
+                                <div class="big-value" id="dispStaffLoss">₹90,000</div>
+                                <p><span id="dispMtHours">1,350</span> hours spent on manual typing/review.</p>
+                            </div>
+
+                            <div class="info-card warning">
+                                <div class="card-icon">📉</div>
+                                <h3>Billing Delays</h3>
+                                <div class="big-value" id="dispBillingLoss">₹18,750</div>
+                                <p>Working capital interest Cost impact.</p>
+                            </div>
+                        </div>
+
+                        <div class="slide-footer">
+                            <button class="btn-secondary" onclick="goToSlide(0)">Back</button>
+                            <button class="btn-primary-lg" onclick="goToSlide(2)">Show The Fix ➝</button>
+                        </div>
+                    </section>
+
+                    <!-- SLIDE 3: TRANSFORMATION -->
+                    <section class="slide" id="slide-2">
+                        <h2>3. The Transformation</h2>
+                        <p class="section-desc">With Patient Lens AI (10 min processing).</p>
+
+                        <div class="impact-comparison">
+                            <div class="impact-row">
+                                <div class="label">Processing Time</div>
+                                <div class="val-old">3 Hours</div>
+                                <div class="arrow">➝</div>
+                                <div class="val-new">10 Mins</div>
+                            </div>
+                            <div class="impact-row">
+                                <div class="label">Bed Revenue Loss</div>
+                                <div class="val-old" id="oldRevLoss">₹16.8 L</div>
+                                <div class="arrow">➝</div>
+                                <div class="val-new">₹0</div>
+                            </div>
+                            <div class="impact-row">
+                                <div class="label">Patient Experience</div>
+                                <div class="val-old">Frustrated</div>
+                                <div class="arrow">➝</div>
+                                <div class="val-new">Delighted</div>
+                            </div>
+                        </div>
+
+                        <div class="cta-box">
+                            <h3>Ready to fix this?</h3>
+                            <p>Stop losing <span id="txtMonthlyDrain">₹17 L</span> every month.</p>
+                            <div class="cta-actions">
+                                <button class="btn-secondary" onclick="goToSlide(1)">Back</button>
+                                <button class="btn-primary-lg" onclick="alert('Book a Demo!')">Book a Pilot</button>
+                            </div>
+                            <button class="btn-link" onclick="goToSlide(0)">Recalculate Inputs ↺</button>
+                        </div>
+                    </section>
                 </div>
+            </main>
 
-                <div class="mini-metrics">
-                    <div class="mini-metric">
-                        <span>Current Drain</span>
-                        <strong id="dashTotalCost" class="bad">₹17.9 L</strong>
+            <!-- RIGHT PANEL: Sticky Dashboard -->
+            <aside class="dashboard-panel">
+                <div class="sticky-wrapper">
+                    <h3>Live Impact Analysis</h3>
+
+                    <div class="dashboard-metric primary">
+                        <span class="metric-label" id="labelMainMetric">Monthly Drain</span>
+                        <span class="metric-value bad" id="dashMainValue">₹17.9 L</span>
+                        <span class="metric-sub" id="dashSubMetric" style="opacity:0">ROI: <span
+                                id="dashRoi">--</span></span>
                     </div>
-                    <div class="mini-metric">
-                        <span>AI Cost</span>
-                        <strong id="dashAiCost" class="neutral">₹15 k</strong>
+
+                    <div class="mini-metrics">
+                        <div class="mini-metric">
+                            <span>Current Drain</span>
+                            <strong id="dashTotalCost" class="bad">₹17.9 L</strong>
+                        </div>
+                        <div class="mini-metric">
+                            <span>AI Cost</span>
+                            <strong id="dashAiCost" class="neutral">₹15 k</strong>
+                        </div>
+                    </div>
+
+                    <div class="chart-box" id="boxFiveYear" style="opacity: 0; pointer-events: none;">
+                        <h4>5-Year Projected Savings</h4>
+                        <div class="big-number" id="dashFiveYear">₹10.6 Cr</div>
+                    </div>
+
+                    <div class="dashboard-footer">
+                        <p>Based on <span id="dashDischarges">150</span> monthly discharges</p>
                     </div>
                 </div>
+            </aside>
+        </div>
 
-                <div class="chart-box" id="boxFiveYear" style="opacity: 0; pointer-events: none;">
-                    <h4>5-Year Projected Savings</h4>
-                    <div class="big-number" id="dashFiveYear">₹10.6 Cr</div>
-                </div>
-
-                <div class="dashboard-footer">
-                    <p>Based on <span id="dashDischarges">150</span> monthly discharges</p>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <script src="js/script.js"></script>
+        <script src="js/script.js"></script>
 </body>
 
 </html>

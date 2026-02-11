@@ -34,22 +34,28 @@ body {
 
 /* LAYOUT */
 .app-container {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    /* Split: 60% Left, 40% Right */
-    gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    /* Split: 60% Left, 40% Right */
+    gap: 2rem;
+    align-items: start;
+    /* CRITICAL: Align tops perfectly */
 }
 
 /* LEFT PANEL (Story) */
 .story-panel {
     background: transparent;
     position: relative;
-    /* Maintain height for absolute slides? No, let's make container flex */
-    min-height: 600px;
+    width: 100%;
 }
 
 .app-header {
@@ -346,7 +352,8 @@ body {
 
 .sticky-wrapper {
     position: sticky;
-    top: 2rem;
+    top: 0;
+    /* Align perfectly with left component top */
     background: var(--primary);
     color: white;
     padding: 2.5rem;
