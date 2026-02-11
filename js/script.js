@@ -18,13 +18,12 @@ let hospitalData = {
     fiveYearSavings: 100000000
 };
 
-// UI State
-let currentStage = 0; // 0: Input, 1: Hidden Costs, 2: Transformation
+let currentSlide = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     bindInputs();
-    bindActions();
     calculateAndRender();
+    updateUI(); // Initial render
 });
 
 function bindInputs() {
@@ -37,33 +36,27 @@ function bindInputs() {
     });
 }
 
-function bindActions() {
-    document.getElementById('btnRevealCosts').addEventListener('click', () => {
-        currentStage = 1;
-        revealSection('sec-hidden-costs');
-        // Hide button after click? No, keep it as navigation anchor or hide it.
-        document.getElementById('btnRevealCosts').style.display = 'none';
-        updateUI();
-    });
+// Global scope for onclick
+window.goToSlide = function (n) {
+    // Hide current
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(s => s.classList.remove('active-slide'));
 
-    document.getElementById('btnRevealTransform').addEventListener('click', () => {
-        currentStage = 2;
-        revealSection('sec-transformation');
-        document.getElementById('btnRevealTransform').style.display = 'none';
-        updateUI();
-    });
-}
+    // Show next
+    const target = document.getElementById(`slide-${n}`);
+    if (target) target.classList.add('active-slide');
 
-function revealSection(id) {
-    const el = document.getElementById(id);
-    el.classList.remove('hidden-step');
-    el.classList.add('visible-step');
+    // Update Dots
+    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+    document.querySelector(`.dot[data-step="${n}"]`)?.classList.add('active');
 
-    // Smooth scroll to it
-    setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-}
+    currentSlide = n;
+
+    // Scroll top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    updateUI();
+};
 
 function calculateAndRender() {
     const monthlyDischarges = parseInt(document.getElementById('monthlyDischargesInput').value) || 150;
@@ -116,51 +109,58 @@ function updateUI() {
     };
     const num = (val) => Math.round(val).toLocaleString('en-IN');
 
-    // Left Panel Checks
+    // Slide 2 values
     setText('dispBedLoss', fmt(hospitalData.bedRevenueLoss));
     setText('dispBedDays', hospitalData.bedDaysLost.toFixed(1));
     setText('dispStaffLoss', fmt(hospitalData.staffCost));
     setText('dispMtHours', num(hospitalData.mtHoursWaste));
     setText('dispBillingLoss', fmt(hospitalData.billingDelay));
+
+    // Slide 3 values
     setText('oldRevLoss', fmt(hospitalData.bedRevenueLoss));
     setText('txtMonthlyDrain', fmt(hospitalData.totalCost));
 
-    // Right Panel (State Dependent)
+    // Dashboard Logic
+    const dashWrapper = document.querySelector('.sticky-wrapper');
     const mainLabel = document.getElementById('labelMainMetric');
     const mainVal = document.getElementById('dashMainValue');
     const roiContainer = document.getElementById('dashSubMetric');
     const fiveYearBox = document.getElementById('boxFiveYear');
 
-    if (currentStage === 0) {
-        // Stage 0: Preview Mode
+    // Reset Classes
+    dashWrapper.classList.remove('state-danger', 'state-success');
+
+    if (currentSlide === 0) {
+        // Slide 1: Inputs -> Show Potential Drain (Neutral/Teal)
         mainLabel.textContent = "Potential Drain";
         mainVal.textContent = fmt(hospitalData.totalCost);
         mainVal.className = "metric-value bad";
         roiContainer.style.opacity = '0';
-        fiveYearBox.classList.add('hidden-step');
+        fiveYearBox.style.opacity = '0';
 
-    } else if (currentStage === 1) {
-        // Stage 1: Problem Realization
+    } else if (currentSlide === 1) {
+        // Slide 2: Problem -> Show Red Alert (Drain Confirmed)
+        dashWrapper.classList.add('state-danger');
         mainLabel.textContent = "Monthly Loss";
         mainVal.textContent = fmt(hospitalData.totalCost);
-        mainVal.className = "metric-value bad"; // Emphasize RED
+        mainVal.className = "metric-value good"; // White text on Red BG
         roiContainer.style.opacity = '0';
-        fiveYearBox.classList.add('hidden-step');
+        fiveYearBox.style.opacity = '0';
 
-    } else if (currentStage === 2) {
-        // Stage 2: Solution
+    } else if (currentSlide === 2) {
+        // Slide 3: Solution -> Show Green Success (Savings)
+        dashWrapper.classList.add('state-success');
         mainLabel.textContent = "Monthly Savings";
         mainVal.textContent = fmt(hospitalData.netSavings);
-        mainVal.className = "metric-value good"; // Switch to WHITE/GREEN
+        mainVal.className = "metric-value good"; // White text on Green BG
+
         roiContainer.style.opacity = '1';
         setText('dashRoi', hospitalData.roi + 'X');
 
-        fiveYearBox.classList.remove('hidden-step');
-        fiveYearBox.classList.add('visible-step');
+        fiveYearBox.style.opacity = '1';
         setText('dashFiveYear', '₹' + (hospitalData.fiveYearSavings / 10000000).toFixed(2) + ' Cr');
     }
 
-    // Always visible metrics
     setText('dashTotalCost', fmt(hospitalData.totalCost));
     setText('dashAiCost', '₹' + (hospitalData.aiCost / 1000).toFixed(1) + ' k');
     setText('dashDischarges', hospitalData.monthlyDischarges);
