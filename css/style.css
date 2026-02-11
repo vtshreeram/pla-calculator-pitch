@@ -204,6 +204,8 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
+    justify-content: flex-end;
+    /* Align buttons to the right */
 }
 
 /* CARDS */
