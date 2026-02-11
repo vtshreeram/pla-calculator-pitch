@@ -1,191 +1,350 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <title>Patient Lens AI - Discharge Impact Analyzer</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Lens AI - ROI Configurator</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
+    <body>
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo">🏥 Patient Lens AI</div>
+                <h1>Discharge Impact Analyzer</h1>
+                <!-- Progress Dots -->
+                <div class="progress-container">
+                    <div class="dot active" data-step="0"></div>
+                    <div class="dot" data-step="1"></div>
+                    <div class="dot" data-step="2"></div>
+                </div>
+            </header>
 
-<body>
+            <div class="main-layout">
+                <!-- LEFT PANEL: Presentation Deck -->
+                <main class="story-panel">
+                    <div class="slider-wrapper">
+                        <!-- SLIDE 1: INPUTS -->
+                        <section class="slide active-slide" id="slide-0">
+                            <h2>1. Hospital Snapshot</h2>
+                            <p class="section-desc">
+                                Enter your current metrics to establish a
+                                baseline.
+                            </p>
 
-    <div class="app-container">
-        <header class="app-header">
-            <div class="logo">🏥 Patient Lens AI</div>
-            <h1>Discharge ROI Configurator</h1>
-            <!-- Progress Dots -->
-            <div class="progress-container">
-                <div class="dot active" data-step="0"></div>
-                <div class="dot" data-step="1"></div>
-                <div class="dot" data-step="2"></div>
+                            <div class="input-group">
+                                <label>Hospital Name</label>
+                                <input
+                                    type="text"
+                                    id="hospitalName"
+                                    value="Apollo Specialty Hospital"
+                                />
+                            </div>
+
+                            <div class="input-grid">
+                                <div class="input-group">
+                                    <label>Number of Beds</label>
+                                    <input
+                                        type="number"
+                                        id="numBeds"
+                                        value="200"
+                                        min="1"
+                                    />
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Average Occupancy (%)</label>
+                                    <input
+                                        type="number"
+                                        id="occupancyPct"
+                                        value="75"
+                                        min="0"
+                                        max="100"
+                                    />
+                                    <span class="hint">Value between 0–100</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Average Discharges</label>
+                                    <div class="toggle-group">
+                                        <button type="button" class="toggle-btn active" id="togglePerDay" onclick="setDischargeMode('day')">Per Day</button>
+                                        <button type="button" class="toggle-btn" id="togglePerMonth" onclick="setDischargeMode('month')">Per Month</button>
+                                    </div>
+                                    <input
+                                        type="number"
+                                        id="dischargeVolumeInput"
+                                        value="5"
+                                        min="1"
+                                    />
+                                    <span class="hint">Enter per day or per month based on your hospital data.</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Average Discharge Time</label>
+                                    <select id="dischargeTime">
+                                        <option value="1">1 hour</option>
+                                        <option value="2">2 hours</option>
+                                        <option value="3" selected>3 hours</option>
+                                        <option value="4">4 hours</option>
+                                        <option value="5">5 hours</option>
+                                        <option value="6">6+ hours</option>
+                                    </select>
+                                    <span class="hint">Time from doctor clearance to patient exit.</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Medical Transcribers</label>
+                                    <input
+                                        type="number"
+                                        id="numMTs"
+                                        value="3"
+                                        min="1"
+                                    />
+                                    <span class="hint">Staff handling summaries</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Avg Staff Cost/Mo</label>
+                                    <input
+                                        type="number"
+                                        id="staffCostInput"
+                                        value="30000"
+                                        step="1000"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="slide-footer">
+                                <button
+                                    class="btn-primary-lg"
+                                    onclick="goToSlide(1)"
+                                >
+                                    Analyze Impact ➝
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 2: COST BREAKDOWN -->
+                        <section class="slide" id="slide-1">
+                            <h2>2. The Hidden Cost of Discharge Delays</h2>
+                            <p class="section-desc">
+                                Based on your hospital's current discharge workflow.
+                            </p>
+
+                            <div class="cards-grid cost-cards">
+                                <div class="info-card cost-card">
+                                    <div class="card-icon">👨‍⚕️</div>
+                                    <h3>Doctor Time per Discharge</h3>
+                                    <div class="big-value cost-value" id="dispDoctorTimePerDischarge">
+                                        20 minutes per discharge
+                                    </div>
+                                    <p class="cost-subline">
+                                        <span id="dispDoctorHoursMonth">50.0</span> hours/month
+                                    </p>
+                                    <p class="cost-subline">
+                                        <span id="dispDoctorCostMonth">₹1,00,000</span>/month equivalent cost
+                                    </p>
+                                </div>
+
+                                <div class="info-card cost-card">
+                                    <div class="card-icon">📝</div>
+                                    <h3>Manual Documentation Effort</h3>
+                                    <div class="big-value cost-value" id="dispMtHoursMonth">
+                                        315.0 hours/month
+                                    </div>
+                                    <p class="cost-subline">
+                                        <span id="dispMtCostMonth">₹59,063</span>/month documentation cost
+                                    </p>
+
+                                </div>
+
+                                <div class="info-card cost-card">
+                                    <div class="card-icon">⏳</div>
+                                    <h3>Patient Waiting Time</h3>
+                                    <div class="big-value cost-value" id="dispPatientWaitPerDischarge">
+                                        3 hours per discharge
+                                    </div>
+                                    <p class="cost-subline">
+                                        Equals <span id="dispPatientWaitTotal">450</span> total waiting hours per month.
+                                    </p>
+                                    <p class="cost-subline" style="font-size:0.7rem; font-style:italic; opacity:0.7; margin-top:0.25rem;">
+                                        Based on your monthly discharge volume.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="slide-footer">
+                                <button
+                                    class="btn-secondary"
+                                    onclick="goToSlide(0)"
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    class="btn-primary-lg"
+                                    onclick="goToSlide(2)"
+                                >
+                                    Show the Transformation →
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- SLIDE 3: TRANSFORMATION -->
+                        <section class="slide" id="slide-2">
+                            <h2>3. With Patient Lens AI</h2>
+                            <p class="section-desc">
+                                Discharge summaries generated in under 10 minutes.
+                            </p>
+
+                            <div class="comparison-table">
+                                <div class="comparison-header">
+                                    <div class="col-metric">Metric</div>
+                                    <div class="col-current">Current Process</div>
+                                    <div class="col-pla">With PLA</div>
+                                </div>
+
+                                <div class="comparison-row">
+                                    <div class="col-metric">Discharge Processing Time</div>
+                                    <div class="col-current" id="tblCurrentDischargeTime">3 hours</div>
+                                    <div class="col-pla pla-value">10 minutes</div>
+                                </div>
+
+                                <div class="comparison-row">
+                                    <div class="col-metric">Doctor Time per Discharge</div>
+                                    <div class="col-current" id="tblCurrentDoctorTime">20 minutes</div>
+                                    <div class="col-pla pla-value">5 minutes</div>
+                                </div>
+
+                                <div class="comparison-row">
+                                    <div class="col-metric">Monthly Discharge Effort</div>
+                                    <div class="col-current" id="tblCurrentEffort">513 hours/month</div>
+                                    <div class="col-pla pla-value" id="tblPlaEffort">77 hours/month</div>
+                                </div>
+
+                                <div class="comparison-row">
+                                    <div class="col-metric">Documentation Cost</div>
+                                    <div class="col-current" id="tblCurrentDocCost">₹84,375/month</div>
+                                    <div class="col-pla pla-value" id="tblPlaDocCost">₹8,438/month</div>
+                                </div>
+                            </div>
+
+                            <div class="slide-footer">
+                                <button
+                                    class="btn-secondary"
+                                    onclick="goToSlide(1)"
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+
+                <!-- RIGHT PANEL: Sticky Dashboard -->
+                <aside class="dashboard-panel">
+                    <div class="sticky-wrapper" id="dashboardWrapper">
+                        <h3 id="dashPanelTitle">Current Discharge Reality</h3>
+
+                        <!-- Screen 1: Time-Based Impact Cards -->
+                        <div class="time-impact-cards" id="timeImpactCards">
+                            <div class="time-card">
+                                <div class="time-card-icon">🏥</div>
+                                <div class="time-card-label">Total Staff Effort per Discharge</div>
+                                <div class="time-card-value" id="dashHospitalEffort">2.1 hours</div>
+                                <div class="time-card-desc">Time spent across documentation, billing, and coordination.</div>
+                            </div>
+
+                            <div class="time-card">
+                                <div class="time-card-icon">👨‍⚕️</div>
+                                <div class="time-card-label">Doctor Time per Discharge</div>
+                                <div class="time-card-value" id="dashDoctorTime">20 minutes</div>
+                                <div class="time-card-desc">Time spent on summary review and approvals.</div>
+                            </div>
+
+                            <div class="time-card">
+                                <div class="time-card-icon">⏳</div>
+                                <div class="time-card-label">Patient Waiting After Clearance</div>
+                                <div class="time-card-value" id="dashPatientWait">3 hours</div>
+                                <div class="time-card-desc">Time from doctor clearance to final discharge.</div>
+                            </div>
+                        </div>
+
+                        <!-- Screen 2: Monthly Impact Summary (hidden on other screens) -->
+                        <div class="cost-summary-panel" id="costSummaryPanel" style="display: none;">
+                            <div class="summary-metric">
+                                <div class="summary-metric-icon">⏱️</div>
+                                <div class="summary-metric-label">Total Discharge Effort</div>
+                                <div class="summary-metric-value" id="dashTotalEffortHours">365.0 hours/month</div>
+                                <div class="summary-metric-desc">spent on discharges</div>
+                            </div>
+
+                            <div class="summary-metric highlight">
+                                <div class="summary-metric-icon">💰</div>
+                                <div class="summary-metric-label">Total Monthly Discharge Cost</div>
+                                <div class="summary-metric-value large" id="dashTotalMonthlyCost">₹1.59 L</div>
+                                <div class="summary-metric-desc">total impact</div>
+                            </div>
+
+                            <div class="summary-metric">
+                                <div class="summary-metric-icon">📊</div>
+                                <div class="summary-metric-label">Average Cost per Discharge</div>
+                                <div class="summary-metric-value" id="dashCostPerDischarge">₹1,060</div>
+                                <div class="summary-metric-desc">per discharge</div>
+                            </div>
+                        </div>
+
+                        <!-- Screen 3: Monthly Financial Outcome (hidden on other screens) -->
+                        <div class="financial-outcome-panel" id="financialOutcomePanel" style="display: none;">
+                            <div class="summary-metric">
+                                <div class="summary-metric-icon">📉</div>
+                                <div class="summary-metric-label">Current Monthly Loss</div>
+                                <div class="summary-metric-value" id="dashCurrentLoss">₹1.59 L</div>
+                                <div class="summary-metric-desc">total discharge cost/month</div>
+                            </div>
+
+                            <div class="summary-metric highlight">
+                                <div class="summary-metric-icon">✅</div>
+                                <div class="summary-metric-label">Monthly Savings with PLA</div>
+                                <div class="summary-metric-value large" id="dashMonthlySavings">₹1.44 L</div>
+                                <div class="summary-metric-desc">saved per month</div>
+                            </div>
+
+                            <div class="summary-metric">
+                                <div class="summary-metric-icon">💳</div>
+                                <div class="summary-metric-label">PLA Cost per Discharge</div>
+                                <div class="summary-metric-value" id="dashPlaCostPerDischarge">₹100</div>
+                                <div class="summary-metric-desc">Pay only per generated discharge summary.</div>
+                            </div>
+
+                        </div>
+
+                        <div class="dashboard-footer">
+                            <p id="dashFooterText">Based on operational studies across mid-size hospitals.</p>
+                        </div>
+                    </div>
+                </aside>
             </div>
-        </header>
+            <!-- End main-layout -->
+        </div>
+        <!-- End app-container -->
 
-        <div class="main-layout">
-            <!-- LEFT PANEL: Presentation Deck -->
-            <main class="story-panel">
-
-                <div class="slider-wrapper">
-                    <!-- SLIDE 1: INPUTS -->
-                    <section class="slide active-slide" id="slide-0">
-                        <h2>1. Hospital Snapshot</h2>
-                        <p class="section-desc">Enter your current metrics to establish a baseline.</p>
-
-                        <div class="input-group">
-                            <label>Hospital Name</label>
-                            <input type="text" id="hospitalName" value="Apollo Specialty Hospital">
-                        </div>
-
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label>Monthly Discharges</label>
-                                <input type="number" id="monthlyDischargesInput" value="150" min="1">
-                                <span class="hint">Approx 5/day</span>
-                            </div>
-
-                            <div class="input-group">
-                                <label>Avg Discharge Time</label>
-                                <select id="dischargeTime">
-                                    <option value="1">1 hour</option>
-                                    <option value="2">2 hours</option>
-                                    <option value="3" selected>3 hours</option>
-                                    <option value="4">4 hours</option>
-                                    <option value="5">5 hours</option>
-                                </select>
-                                <span class="hint">Time from doctor clearance to patient exit</span>
-                            </div>
-
-                            <div class="input-group">
-                                <label>Medical Transcribers</label>
-                                <input type="number" id="numMTs" value="3" min="1">
-                                <span class="hint">Staff handling summaries</span>
-                            </div>
-
-                            <div class="input-group">
-                                <label>Avg Staff Cost/Mo</label>
-                                <input type="number" id="staffCostInput" value="30000" step="1000">
-                            </div>
-                        </div>
-
-                        <div class="slide-footer">
-                            <button class="btn-primary-lg" onclick="goToSlide(1)">Analyze Impact ➝</button>
-                        </div>
-                    </section>
-
-                    <!-- SLIDE 2: HIDDEN COSTS -->
-                    <section class="slide" id="slide-1">
-                        <h2>2. The Hidden Drain</h2>
-                        <p class="section-desc">What this inefficiency actually costs you every month.</p>
-
-                        <div class="cards-grid">
-                            <div class="info-card danger">
-                                <div class="card-icon">🛏️</div>
-                                <h3>Bed Revenue Loss</h3>
-                                <div class="big-value" id="dispBedLoss">₹16.8 L</div>
-                                <p><span id="dispBedDays">18.7</span> bed-days lost/mo due to blocked beds.</p>
-                            </div>
-
-                            <div class="info-card warning">
-                                <div class="card-icon">👥</div>
-                                <h3>Staff Inefficiency</h3>
-                                <div class="big-value" id="dispStaffLoss">₹90,000</div>
-                                <p><span id="dispMtHours">1,350</span> hours spent on manual typing/review.</p>
-                            </div>
-
-                            <div class="info-card warning">
-                                <div class="card-icon">📉</div>
-                                <h3>Billing Delays</h3>
-                                <div class="big-value" id="dispBillingLoss">₹18,750</div>
-                                <p>Working capital interest Cost impact.</p>
-                            </div>
-                        </div>
-
-                        <div class="slide-footer">
-                            <button class="btn-secondary" onclick="goToSlide(0)">Back</button>
-                            <button class="btn-primary-lg" onclick="goToSlide(2)">Show The Fix ➝</button>
-                        </div>
-                    </section>
-
-                    <!-- SLIDE 3: TRANSFORMATION -->
-                    <section class="slide" id="slide-2">
-                        <h2>3. The Transformation</h2>
-                        <p class="section-desc">With Patient Lens AI (10 min processing).</p>
-
-                        <div class="impact-comparison">
-                            <div class="impact-row">
-                                <div class="label">Processing Time</div>
-                                <div class="val-old">3 Hours</div>
-                                <div class="arrow">➝</div>
-                                <div class="val-new">10 Mins</div>
-                            </div>
-                            <div class="impact-row">
-                                <div class="label">Bed Revenue Loss</div>
-                                <div class="val-old" id="oldRevLoss">₹16.8 L</div>
-                                <div class="arrow">➝</div>
-                                <div class="val-new">₹0</div>
-                            </div>
-                            <div class="impact-row">
-                                <div class="label">Patient Experience</div>
-                                <div class="val-old">Frustrated</div>
-                                <div class="arrow">➝</div>
-                                <div class="val-new">Delighted</div>
-                            </div>
-                        </div>
-
-                        <div class="cta-box">
-                            <h3>Ready to fix this?</h3>
-                            <p>Stop losing <span id="txtMonthlyDrain">₹17 L</span> every month.</p>
-                            <div class="cta-actions">
-                                <button class="btn-secondary" onclick="goToSlide(1)">Back</button>
-                                <button class="btn-primary-lg" onclick="alert('Book a Demo!')">Book a Pilot</button>
-                            </div>
-                            <button class="btn-link" onclick="goToSlide(0)">Recalculate Inputs ↺</button>
-                        </div>
-                    </section>
-                </div>
-            </main>
-
-            <!-- RIGHT PANEL: Sticky Dashboard -->
-            <aside class="dashboard-panel">
-                <div class="sticky-wrapper">
-                    <h3>Live Impact Analysis</h3>
-
-                    <div class="dashboard-metric primary">
-                        <span class="metric-label" id="labelMainMetric">Monthly Drain</span>
-                        <span class="metric-value bad" id="dashMainValue">₹17.9 L</span>
-                        <span class="metric-sub" id="dashSubMetric" style="opacity:0">ROI: <span
-                                id="dashRoi">--</span></span>
-                    </div>
-
-                    <div class="mini-metrics">
-                        <div class="mini-metric">
-                            <span>Current Drain</span>
-                            <strong id="dashTotalCost" class="bad">₹17.9 L</strong>
-                        </div>
-                        <div class="mini-metric">
-                            <span>AI Cost</span>
-                            <strong id="dashAiCost" class="neutral">₹15 k</strong>
-                        </div>
-                    </div>
-
-                    <div class="chart-box" id="boxFiveYear" style="opacity: 0; pointer-events: none;">
-                        <h4>5-Year Projected Savings</h4>
-                        <div class="big-number" id="dashFiveYear">₹10.6 Cr</div>
-                    </div>
-
-                    <div class="dashboard-footer">
-                        <p>Based on <span id="dashDischarges">150</span> monthly discharges</p>
-                    </div>
-                </div>
-            </aside>
-        </div> <!-- End main-layout -->
-    </div> <!-- End app-container -->
-
-    <script src="js/script.js"></script>
-</body>
-
+        <script>
+            // Unregister any existing service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+        </script>
+        <script src="js/script.js"></script>
+    </body>
 </html>

@@ -191,6 +191,42 @@ body {
     margin-top: 0.25rem;
 }
 
+/* TOGGLE GROUP (Per Day / Per Month) */
+.toggle-group {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0.5rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: #F9FAFB;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toggle-btn:first-child {
+    border-right: 1px solid #E5E7EB;
+}
+
+.toggle-btn.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+.toggle-btn:hover:not(.active) {
+    background: #E5E7EB;
+}
+
 /* FOOTER ACTIONS */
 .slide-footer {
     margin-top: auto;
@@ -248,58 +284,102 @@ body {
     margin-bottom: 0.5rem;
 }
 
-/* TRANSFORMATION */
-.impact-comparison {
+/* SCREEN 2: Cost Breakdown Cards */
+.cost-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.info-card.cost-card {
+    background: #F0FDFA;
+    border: 1px solid #CCFBF1;
+    border-left: 4px solid var(--primary);
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+}
+
+.info-card.cost-card h3 {
+    color: var(--primary-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+}
+
+.info-card.cost-card .big-value.cost-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.4rem;
+}
+
+.info-card.cost-card .cost-subline {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
+    line-height: 1.5;
+}
+
+.info-card.cost-card .cost-subline span {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+/* SCREEN 3: Comparison Table */
+.comparison-table {
     background: #F9FAFB;
     border-radius: 12px;
-    padding: 1.5rem;
+    overflow: hidden;
+    border: 1px solid #E5E7EB;
 }
 
-.impact-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
+.comparison-header {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 0;
+    padding: 0.85rem 1.25rem;
+    background: var(--primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.comparison-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 0;
+    padding: 0.9rem 1.25rem;
     border-bottom: 1px solid #E5E7EB;
+    align-items: center;
+    font-size: 0.88rem;
+    transition: background 0.15s;
 }
 
-.impact-row:last-child {
+.comparison-row:last-child {
     border-bottom: none;
 }
 
-.impact-row .label {
-    font-weight: 500;
-    font-size: 0.9rem;
+.comparison-row:hover {
+    background: #F0FDFA;
 }
 
-.impact-row .val-old {
-    color: var(--danger);
+.comparison-row .col-metric {
     font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.85rem;
 }
 
-.impact-row .val-new {
-    color: var(--success);
-    font-weight: 600;
-}
-
-.arrow {
+.comparison-row .col-current {
     color: var(--text-muted);
-    font-size: 0.8rem;
+    font-weight: 500;
 }
 
-.cta-box {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #E5E7EB;
-}
-
-.cta-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+.comparison-row .col-pla.pla-value {
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .btn-primary-lg {
@@ -342,6 +422,8 @@ body {
     font-size: 0.9rem;
 }
 
+
+
 /* RIGHT PANEL (Sticky Dashboard) */
 .dashboard-panel {
     position: relative;
@@ -363,12 +445,8 @@ body {
     justify-content: space-between;
 }
 
-.sticky-wrapper.state-danger {
-    background: #B91C1C;
-}
-
 .sticky-wrapper.state-success {
-    background: #047857;
+    background: var(--primary-dark);
 }
 
 .sticky-wrapper h3 {
@@ -381,95 +459,127 @@ body {
     padding-bottom: 1rem;
 }
 
-.dashboard-metric {
-    margin-bottom: auto;
-}
 
-.metric-label {
-    display: block;
-    font-size: 1rem;
-    opacity: 0.9;
-    margin-bottom: 0.5rem;
-}
 
-.metric-value {
-    display: block;
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 1rem;
-    transition: color 0.3s ease;
-    letter-spacing: -0.02em;
-}
-
-.metric-value.bad {
-    color: #FECACA;
-}
-
-.metric-value.good {
-    color: #ffffff;
-}
-
-.metric-sub {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    display: inline-block;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(4px);
-}
-
-.mini-metrics {
+/* SCREEN 2: Right Panel - Cost Summary */
+.cost-summary-panel {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.mini-metric {
+    flex-direction: column;
+    gap: 1.25rem;
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: 12px;
 }
 
-.mini-metric span {
-    display: block;
+.summary-metric {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.summary-metric:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.summary-metric.highlight {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.summary-metric-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.summary-metric-label {
     font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     opacity: 0.8;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
 }
 
-.mini-metric strong {
-    font-size: 1.1rem;
-    display: block;
-}
-
-.chart-box {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    transition: opacity 0.5s ease;
-}
-
-.chart-box h4 {
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.8;
-}
-
-.big-number {
-    font-size: 1.5rem;
-    font-weight: 700;
+.summary-metric-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
     color: var(--accent);
+}
+
+.summary-metric-value.large {
+    font-size: 2rem;
+}
+
+.summary-metric-desc {
+    font-size: 0.75rem;
+    opacity: 0.65;
+    line-height: 1.4;
+}
+
+/* TIME-BASED IMPACT CARDS (Screen 1 Right Panel) */
+.time-impact-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex: 1;
+}
+
+.time-card {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    transition: background 0.2s;
+}
+
+.time-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.time-card-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.time-card-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+}
+
+.time-card-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    color: var(--accent);
+}
+
+.time-card-desc {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    line-height: 1.4;
+}
+
+/* Screen 3: Financial Outcome Panel */
+.financial-outcome-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex: 1;
 }
 
 .dashboard-footer {
     text-align: center;
     font-size: 0.8rem;
     opacity: 0.6;
+    margin-top: 1rem;
 }
 
 /* RESPONSIVE */
