@@ -106,23 +106,19 @@ body {
 .slider-wrapper {
     position: relative;
     width: 100%;
-    /* We need min-height so slides don't collapse */
 }
 
 .slide {
     background: var(--bg-surface);
     padding: 2.5rem;
-    /* Match right panel */
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
 
-    /* Absolute positioning for stack */
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     min-height: 620px;
-    /* Match right panel */
 
     opacity: 0;
     transform: translateX(50px);
@@ -141,7 +137,6 @@ body {
     z-index: 2;
     position: relative;
 }
-
 
 .slide h2 {
     font-size: 1.5rem;
@@ -355,34 +350,26 @@ body {
 .sticky-wrapper {
     position: sticky;
     top: 0;
-    /* Align perfectly with left component top */
     background: var(--primary);
     color: white;
     padding: 2.5rem;
-    /* Increased padding */
     border-radius: 20px;
     box-shadow: var(--shadow-lg);
     transition: background 0.5s ease;
 
-    /* Balance Logic */
     min-height: 620px;
-    /* Matches typical height of input slide */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/* State colors */
 .sticky-wrapper.state-danger {
     background: #B91C1C;
 }
 
-/* Dark Red */
 .sticky-wrapper.state-success {
     background: #047857;
 }
-
-/* Dark Green */
 
 .sticky-wrapper h3 {
     font-size: 0.9rem;
@@ -487,24 +474,26 @@ body {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    .app-container {
-        grid-template-columns: 1fr;
+    .main-layout {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1.5rem;
     }
 
     .sticky-wrapper {
         position: relative;
-        margin-bottom: 2rem;
+        margin-bottom: 0;
         top: 0;
         z-index: 100;
-    }
-
-    .app-container {
-        display: flex;
-        flex-direction: column-reverse;
+        min-height: auto;
+        padding: 1.5rem;
     }
 
     .dashboard-panel {
         order: -1;
-        margin-bottom: 2rem;
+    }
+
+    .app-header h1 {
+        font-size: 1.8rem;
     }
 }
