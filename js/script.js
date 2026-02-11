@@ -97,6 +97,17 @@ window.goToSlide = function (n) {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Re-trigger dashboard panel animations
+    retriggerDashboardAnimations(n);
+
+    // Trigger confetti celebration on Slide 3 (Transformation)
+    if (n === 2) {
+        setTimeout(() => {
+            launchConfetti();
+            addSparkles();
+        }, 400);
+    }
+
     updateUI();
 };
 
@@ -325,5 +336,236 @@ function updateUI() {
 
 function setText(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val;
+    if (!el) return;
+
+    const oldVal = el.textContent;
+    if (oldVal === String(val)) return; // No change, skip animation
+
+    el.textContent = val;
+
+    // Add a brief animation flash on value change
+    el.classList.remove('counter-animating');
+    void el.offsetWidth; // Force reflow to restart animation
+    el.classList.add('counter-animating');
+
+    setTimeout(() => el.classList.remove('counter-animating'), 350);
 }
+
+// ═══════════════════════════════════════════════════════
+// CONFETTI CELEBRATION ENGINE
+// ═══════════════════════════════════════════════════════
+
+function launchConfetti() {
+    // Respect reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = [
+        '#00695C', '#1DE9B6', '#10B981', '#F59E0B',
+        '#3B82F6', '#8B5CF6', '#EF4444', '#EC4899',
+        '#06B6D4', '#84CC16'
+    ];
+
+    const confettiPieces = [];
+    const numPieces = 120;
+
+    for (let i = 0; i < numPieces; i++) {
+        confettiPieces.push({
+            x: canvas.width * Math.random(),
+            y: -20 - Math.random() * 200,
+            w: 6 + Math.random() * 6,
+            h: 3 + Math.random() * 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vy: 2 + Math.random() * 4,
+            vx: (Math.random() - 0.5) * 4,
+            rotation: Math.random() * 360,
+            rotationSpeed: (Math.random() - 0.5) * 12,
+            opacity: 1,
+            gravity: 0.08 + Math.random() * 0.04,
+            wobble: Math.random() * 10,
+            wobbleSpeed: 0.03 + Math.random() * 0.05,
+            shape: Math.random() > 0.5 ? 'rect' : 'circle'
+        });
+    }
+
+    let frame = 0;
+    const maxFrames = 200;
+
+    function animate() {
+        frame++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+        confettiPieces.forEach(p => {
+            if (p.y > canvas.height + 20 || p.opacity <= 0) return;
+            alive = true;
+
+            p.vy += p.gravity;
+            p.y += p.vy;
+            p.x += p.vx + Math.sin(p.wobble) * 0.8;
+            p.wobble += p.wobbleSpeed;
+            p.rotation += p.rotationSpeed;
+
+            // Fade out towards end
+            if (frame > maxFrames * 0.7) {
+                p.opacity -= 0.015;
+            }
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.fillStyle = p.color;
+
+            if (p.shape === 'rect') {
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        });
+
+        if (alive && frame < maxFrames) {
+            requestAnimationFrame(animate);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    animate();
+}
+
+// ═══════════════════════════════════════════════════════
+// BUTTON RIPPLE EFFECTS
+// ═══════════════════════════════════════════════════════
+
+function initButtonRipples() {
+    document.querySelectorAll('.btn-primary-lg, .btn-secondary').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.width = '20px';
+            ripple.style.height = '20px';
+
+            this.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+// SPARKLE EFFECTS (Celebration on Slide 3)
+// ═══════════════════════════════════════════════════════
+
+function addSparkles() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const dashboard = document.getElementById('dashboardWrapper');
+    if (!dashboard) return;
+
+    const rect = dashboard.getBoundingClientRect();
+
+    for (let i = 0; i < 8; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'celebration-sparkle';
+        sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+        sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+        sparkle.style.animationDelay = (Math.random() * 0.8) + 's';
+        sparkle.style.width = (6 + Math.random() * 10) + 'px';
+        sparkle.style.height = sparkle.style.width;
+        document.body.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 2000);
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD ANIMATION RE-TRIGGERING
+// ═══════════════════════════════════════════════════════
+
+function retriggerDashboardAnimations(slideIndex) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const dashWrapper = document.getElementById('dashboardWrapper');
+    if (!dashWrapper) return;
+
+    // Re-trigger child card animations by removing and re-adding animation classes
+    const panelMap = {
+        0: '#timeImpactCards .time-card',
+        1: '#costSummaryPanel .summary-metric',
+        2: '#financialOutcomePanel .summary-metric'
+    };
+
+    const selector = panelMap[slideIndex];
+    if (!selector) return;
+
+    const cards = document.querySelectorAll(selector);
+    cards.forEach((card, i) => {
+        card.style.animation = 'none';
+        card.offsetHeight; // force reflow
+        card.style.animation = '';
+        card.style.animationDelay = (0.2 + i * 0.2) + 's';
+    });
+
+    // Add success state for slide 3
+    if (slideIndex === 2) {
+        dashWrapper.classList.add('state-success');
+    } else {
+        dashWrapper.classList.remove('state-success');
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESS DOT CLICK NAVIGATION
+// ═══════════════════════════════════════════════════════
+
+function initDotNavigation() {
+    document.querySelectorAll('.dot').forEach(dot => {
+        dot.addEventListener('click', function () {
+            const step = parseInt(this.dataset.step);
+            if (!isNaN(step)) {
+                window.goToSlide(step);
+            }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+// INPUT FOCUS ANIMATION ENHANCEMENTS
+// ═══════════════════════════════════════════════════════
+
+function initInputAnimations() {
+    document.querySelectorAll('.input-group input, .input-group select').forEach(input => {
+        input.addEventListener('focus', function () {
+            this.closest('.input-group')?.classList.add('input-focused');
+        });
+        input.addEventListener('blur', function () {
+            this.closest('.input-group')?.classList.remove('input-focused');
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+// INITIALIZE ALL ANIMATIONS
+// ═══════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+    initButtonRipples();
+    initDotNavigation();
+    initInputAnimations();
+});

@@ -1,0 +1,795 @@
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS & VISUAL EFFECTS
+   PLA Calculator Pitch - Excitement Layer
+   ═══════════════════════════════════════════════════════ */
+
+/* ── KEYFRAME ANIMATIONS ──────────────────────────────── */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 105, 92, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 20px 6px rgba(0, 105, 92, 0.15);
+    }
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.95);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shakeX {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-4px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes celebrationPop {
+    0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15) rotate(2deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes tickerUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        filter: brightness(1);
+    }
+
+    50% {
+        filter: brightness(1.15);
+    }
+}
+
+/* ── PAGE LOAD ANIMATIONS ─────────────────────────────── */
+
+.app-header {
+    animation: fadeInDown 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.app-header .logo {
+    animation: fadeInDown 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.1s both;
+}
+
+.app-header h1 {
+    animation: fadeInDown 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both;
+}
+
+.progress-container {
+    animation: fadeInDown 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.4s both;
+}
+
+.story-panel {
+    animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s both;
+}
+
+.dashboard-panel {
+    animation: slideInRight 0.9s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
+}
+
+/* ── SLIDE TRANSITION ENHANCEMENTS ────────────────────── */
+
+.slide {
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.slide.active-slide {
+    animation: fadeInScale 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* ── BUTTON ANIMATIONS ────────────────────────────────── */
+
+.btn-primary-lg,
+.btn-secondary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateZ(0);
+}
+
+/* Ripple container */
+.btn-primary-lg .ripple-effect,
+.btn-secondary .ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    animation: ripple 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+.btn-primary-lg:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 4px 15px rgba(0, 105, 92, 0.35),
+        0 0 30px rgba(29, 233, 182, 0.15);
+}
+
+.btn-primary-lg:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 105, 92, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-secondary:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* Primary button shimmer effect */
+.btn-primary-lg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.15),
+            transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary-lg:hover::before {
+    left: 100%;
+}
+
+/* CTA glow pulse on Slide 1 */
+.slide.active-slide#slide-0 .btn-primary-lg {
+    animation: pulseGlow 2.5s infinite;
+}
+
+.slide.active-slide#slide-0 .btn-primary-lg:hover {
+    animation: none;
+}
+
+/* Toggle button animations */
+.toggle-btn {
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.toggle-btn.active {
+    transform: scale(1.02);
+}
+
+.toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* ── INPUT FIELD ANIMATIONS ───────────────────────────── */
+
+.input-group input,
+.input-group select {
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    transform: translateY(-1px);
+    box-shadow:
+        0 0 0 3px rgba(0, 105, 92, 0.1),
+        0 4px 12px rgba(0, 105, 92, 0.08);
+}
+
+.input-group label {
+    transition: color 0.3s;
+}
+
+.input-group:focus-within label {
+    color: var(--primary);
+}
+
+/* ── CARD ANIMATIONS ──────────────────────────────────── */
+
+/* Staggered entrance for cost cards */
+.cost-cards .info-card.cost-card {
+    opacity: 0;
+    animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.slide.active-slide .cost-cards .info-card.cost-card:nth-child(1) {
+    animation-delay: 0.15s;
+}
+
+.slide.active-slide .cost-cards .info-card.cost-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.slide.active-slide .cost-cards .info-card.cost-card:nth-child(3) {
+    animation-delay: 0.45s;
+}
+
+/* Card hover effects */
+.info-card.cost-card {
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.info-card.cost-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+        0 8px 25px rgba(0, 105, 92, 0.12),
+        0 0 0 1px rgba(0, 105, 92, 0.08);
+    border-left-width: 6px;
+}
+
+.info-card.cost-card .card-icon {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.info-card.cost-card:hover .card-icon {
+    transform: scale(1.25) rotate(-5deg);
+}
+
+/* ── COMPARISON TABLE ANIMATIONS ──────────────────────── */
+
+.comparison-row {
+    opacity: 0;
+    animation: fadeInUp 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.slide.active-slide .comparison-row:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.slide.active-slide .comparison-row:nth-child(3) {
+    animation-delay: 0.35s;
+}
+
+.slide.active-slide .comparison-row:nth-child(4) {
+    animation-delay: 0.5s;
+}
+
+.slide.active-slide .comparison-row:nth-child(5) {
+    animation-delay: 0.65s;
+}
+
+.comparison-row:hover {
+    transform: translateX(4px);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.comparison-row .pla-value {
+    transition: all 0.3s;
+}
+
+.comparison-row:hover .pla-value {
+    transform: scale(1.08);
+    display: inline-block;
+    text-shadow: 0 0 8px rgba(0, 105, 92, 0.3);
+}
+
+.comparison-header {
+    animation: fadeInDown 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* ── DASHBOARD PANEL ANIMATIONS ───────────────────────── */
+
+.sticky-wrapper {
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    background-size: 200% 200%;
+}
+
+/* Animated gradient background for dashboard */
+.sticky-wrapper {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark), #00796B);
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
+}
+
+.sticky-wrapper.state-success {
+    background: linear-gradient(135deg, var(--primary-dark), #1B5E20, #004D40);
+    background-size: 300% 300%;
+    animation: gradientShift 6s ease infinite;
+}
+
+/* Time impact card animations */
+.time-card {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.time-card:hover {
+    transform: translateX(6px) scale(1.02);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.time-card-icon {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.time-card:hover .time-card-icon {
+    transform: scale(1.3) rotate(-8deg);
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Time card stagger on slide 0 */
+.time-impact-cards .time-card {
+    opacity: 0;
+    animation: slideInLeft 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.time-impact-cards .time-card:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.time-impact-cards .time-card:nth-child(2) {
+    animation-delay: 0.8s;
+}
+
+.time-impact-cards .time-card:nth-child(3) {
+    animation-delay: 1.0s;
+}
+
+/* Summary metric animations */
+.summary-metric {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.summary-metric:hover {
+    transform: translateX(6px) scale(1.02);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.summary-metric.highlight {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+.summary-metric-icon {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.summary-metric:hover .summary-metric-icon {
+    transform: scale(1.3) rotate(-5deg);
+}
+
+/* Dashboard panel stagger animations */
+.cost-summary-panel .summary-metric,
+.financial-outcome-panel .summary-metric {
+    opacity: 0;
+    animation: slideInLeft 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.cost-summary-panel .summary-metric:nth-child(1),
+.financial-outcome-panel .summary-metric:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.cost-summary-panel .summary-metric:nth-child(2),
+.financial-outcome-panel .summary-metric:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.cost-summary-panel .summary-metric:nth-child(3),
+.financial-outcome-panel .summary-metric:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+/* ── PROGRESS DOTS ────────────────────────────────────── */
+
+.dot {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+.dot:hover {
+    transform: scale(1.3);
+    background: var(--primary);
+    opacity: 0.7;
+}
+
+.dot.active {
+    animation: dotPulse 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ── VALUE COUNTER ANIMATION CLASS ────────────────────── */
+
+.value-updating {
+    animation: tickerUp 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Highlight flash for updated values */
+.value-flash {
+    position: relative;
+}
+
+.value-flash::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 8px;
+    background: rgba(29, 233, 182, 0.2);
+    animation: fadeInScale 0.3s ease-out forwards;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ── CONFETTI CANVAS ──────────────────────────────────── */
+
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ── FLOATING PARTICLES BACKGROUND ────────────────────── */
+
+.ambient-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(0, 105, 92, 0.08);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.particle:nth-child(1) {
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+    animation-duration: 7s;
+    width: 8px;
+    height: 8px;
+}
+
+.particle:nth-child(2) {
+    left: 25%;
+    top: 60%;
+    animation-delay: 1s;
+    animation-duration: 5s;
+}
+
+.particle:nth-child(3) {
+    left: 50%;
+    top: 10%;
+    animation-delay: 2s;
+    animation-duration: 8s;
+    width: 10px;
+    height: 10px;
+}
+
+.particle:nth-child(4) {
+    left: 70%;
+    top: 40%;
+    animation-delay: 0.5s;
+    animation-duration: 6s;
+}
+
+.particle:nth-child(5) {
+    left: 85%;
+    top: 75%;
+    animation-delay: 3s;
+    animation-duration: 7s;
+    width: 4px;
+    height: 4px;
+}
+
+.particle:nth-child(6) {
+    left: 40%;
+    top: 85%;
+    animation-delay: 1.5s;
+    animation-duration: 9s;
+    width: 5px;
+    height: 5px;
+}
+
+.particle:nth-child(7) {
+    left: 60%;
+    top: 30%;
+    animation-delay: 2.5s;
+    animation-duration: 6.5s;
+}
+
+.particle:nth-child(8) {
+    left: 15%;
+    top: 50%;
+    animation-delay: 4s;
+    animation-duration: 8s;
+    width: 7px;
+    height: 7px;
+}
+
+/* ── SAVINGS BADGE (Celebration on Slide 3) ───────────── */
+
+.savings-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    animation: celebrationPop 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+    margin-top: 0.5rem;
+}
+
+.savings-badge .badge-icon {
+    font-size: 1.1rem;
+    animation: float 2s ease-in-out infinite;
+}
+
+/* ── CELEBRATION OVERLAY (Slide 3 transition) ─────────── */
+
+.celebration-sparkle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: sparkle 1.5s ease-in-out forwards;
+    pointer-events: none;
+}
+
+/* ── SMOOTH NUMBER COUNTER ────────────────────────────── */
+
+.counter-animating {
+    display: inline-block;
+    animation: countUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ── RESPONSIVE ADJUSTMENTS ───────────────────────────── */
+
+@media (max-width: 900px) {
+
+    .time-impact-cards .time-card,
+    .cost-summary-panel .summary-metric,
+    .financial-outcome-panel .summary-metric {
+        animation-delay: 0.1s !important;
+    }
+}
+
+/* ── PREFERS REDUCED MOTION ───────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .ambient-particles {
+        display: none;
+    }
+}
