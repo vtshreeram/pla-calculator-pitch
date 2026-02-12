@@ -90,6 +90,16 @@ window.goToSlide = function (n) {
     const target = document.getElementById(`slide-${n}`);
     if (target) target.classList.add('active-slide');
 
+    // Manage full-width layout for Intro (2), How It Works (4) and Deployments (5)
+    const layout = document.querySelector('.main-layout');
+    if (layout) {
+        if (n === 2 || n >= 4) {
+            layout.classList.add('full-width-active');
+        } else {
+            layout.classList.remove('full-width-active');
+        }
+    }
+
     document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
     document.querySelector(`.dot[data-step="${n}"]`)?.classList.add('active');
 
@@ -100,8 +110,8 @@ window.goToSlide = function (n) {
     // Re-trigger dashboard panel animations
     retriggerDashboardAnimations(n);
 
-    // Trigger confetti celebration on Slide 3 (Transformation)
-    if (n === 2) {
+    // Trigger confetti celebration on Slide 3 (Transformation Table)
+    if (n === 3) {
         setTimeout(() => {
             launchConfetti();
             addSparkles();
@@ -270,7 +280,11 @@ function updateUI() {
     if (!dashWrapper) return;
 
     // Reset state classes
-    dashWrapper.classList.remove('state-success');
+    dashWrapper.classList.remove('state-success', 'state-danger');
+
+    if (currentSlide === 1) {
+        dashWrapper.classList.add('state-danger');
+    }
 
     // Hide all panels first
     if (timeCards) timeCards.style.display = 'none';
@@ -296,8 +310,9 @@ function updateUI() {
 
         if (footerText) footerText.textContent = "Based on your hospital\u2019s discharge workflow inputs.";
 
-    } else if (currentSlide === 1) {
+    } else if (currentSlide === 1 || currentSlide === 2) {
         // ─── Screen 2: Monthly Impact Summary ───
+        // Visible on Slide 1 (Cost) and Slide 2 (Intro)
         panelTitle.textContent = 'Monthly Impact Summary';
         if (costSummary) costSummary.style.display = '';
 
@@ -314,8 +329,9 @@ function updateUI() {
             footerText.textContent = 'Based on ' + hospitalData.monthlyDischarges + ' monthly discharges';
         }
 
-    } else if (currentSlide === 2) {
-        // ─── Screen 3: Monthly Financial Outcome ───
+    } else if (currentSlide >= 3) {
+        // ─── Screen 3+: Monthly Financial Outcome ───
+        // Visible on Slide 3 (Table), 4 (How it works), 5 (Deployments)
         panelTitle.textContent = 'Monthly Financial Outcome';
         if (financialOutcome) financialOutcome.style.display = '';
 
@@ -508,7 +524,10 @@ function retriggerDashboardAnimations(slideIndex) {
     const panelMap = {
         0: '#timeImpactCards .time-card',
         1: '#costSummaryPanel .summary-metric',
-        2: '#financialOutcomePanel .summary-metric'
+        2: '#costSummaryPanel .summary-metric',
+        3: '#financialOutcomePanel .summary-metric',
+        4: '#financialOutcomePanel .summary-metric',
+        5: '#financialOutcomePanel .summary-metric'
     };
 
     const selector = panelMap[slideIndex];
@@ -522,8 +541,8 @@ function retriggerDashboardAnimations(slideIndex) {
         card.style.animationDelay = (0.2 + i * 0.2) + 's';
     });
 
-    // Add success state for slide 3
-    if (slideIndex === 2) {
+    // Add success state for slide 3+
+    if (slideIndex >= 3) {
         dashWrapper.classList.add('state-success');
     } else {
         dashWrapper.classList.remove('state-success');

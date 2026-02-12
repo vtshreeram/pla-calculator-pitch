@@ -32,13 +32,19 @@
 
     <div class="app-container">
         <header class="app-header">
-            <div class="logo">🏥 Patient Lens AI</div>
+            <div class="logo">
+                <img src="assets/logo.png" alt="Patient Lens AI Logo" class="logo-img">
+                <span class="logo-text">Patient Lens AI</span>
+            </div>
             <h1>Discharge Impact Analyzer</h1>
             <!-- Progress Dots -->
             <div class="progress-container">
                 <div class="dot active" data-step="0"></div>
                 <div class="dot" data-step="1"></div>
                 <div class="dot" data-step="2"></div>
+                <div class="dot" data-step="3"></div>
+                <div class="dot" data-step="4"></div>
+                <div class="dot" data-step="5"></div>
             </div>
         </header>
 
@@ -115,14 +121,14 @@
                         </div>
                     </section>
 
-                    <!-- SLIDE 2: COST BREAKDOWN -->
-                    <section class="slide" id="slide-1">
+                    <!-- SLIDE 2: COST BREAKDOWN (RED THEME) -->
+                    <section class="slide slide-red-theme" id="slide-1">
                         <h2>2. The Hidden Cost of Discharge Delays</h2>
                         <p class="section-desc">
                             Based on your hospital's current discharge workflow.
                         </p>
 
-                        <div class="cards-grid cost-cards">
+                        <div class="cards-grid cost-cards cost-cards-red">
                             <div class="info-card cost-card">
                                 <div class="card-icon">👨‍⚕️</div>
                                 <h3>Doctor Time per Discharge</h3>
@@ -169,14 +175,30 @@
                             <button class="btn-secondary" onclick="goToSlide(0)">
                                 Back
                             </button>
-                            <button class="btn-primary-lg" onclick="goToSlide(2)">
+                            <button class="btn-primary-lg" style="background-color: #EF4444;" onclick="goToSlide(2)">
                                 Show the Transformation →
                             </button>
                         </div>
                     </section>
 
-                    <!-- SLIDE 3: TRANSFORMATION -->
+                    <!-- SLIDE 3: TRANSFORMATION INTRO -->
                     <section class="slide" id="slide-2">
+                        <div class="transformation-intro">
+                            <div class="intro-logo">✨</div>
+                            <h2 class="intro-title">Patient Lens AI</h2>
+                            <p class="intro-desc">
+                                See how we transform your discharge process from hours to minutes.
+                            </p>
+                            <button class="btn-primary-lg" onclick="goToSlide(3)">
+                                Reveal Transformation ➝
+                            </button>
+                            <br>
+                            <button class="btn-link" onclick="goToSlide(1)">Back</button>
+                        </div>
+                    </section>
+
+                    <!-- SLIDE 4: TRANSFORMATION TABLE -->
+                    <section class="slide" id="slide-3">
                         <h2>3. With Patient Lens AI</h2>
                         <p class="section-desc">
                             Discharge summaries generated in under 10 minutes.
@@ -215,9 +237,92 @@
                         </div>
 
                         <div class="slide-footer">
-                            <button class="btn-secondary" onclick="goToSlide(1)">
+                            <button class="btn-secondary" onclick="goToSlide(2)">
                                 Back
                             </button>
+                            <button class="btn-primary-lg" onclick="goToSlide(4)">
+                                How It Works →
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- SLIDE 5: HOW IT WORKS -->
+                    <section class="slide" id="slide-4">
+                        <div class="how-it-works-container">
+                            <div class="how-it-works-header">
+                                <h2>How it works</h2>
+                            </div>
+
+                            <div class="steps-grid">
+                                <!-- Step 1 -->
+                                <div class="step-card">
+                                    <div class="step-icon-circle">📄</div>
+                                    <h3>Upload Scanned Documents</h3>
+                                    <p>MRD scans and uploads the complete patient case file.</p>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="step-card">
+                                    <div class="step-icon-circle">✨</div>
+                                    <h3>Multi-Model AI Pipeline</h3>
+                                    <p>OCR, LLMs, and validations combined for accurate summaries.</p>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="step-card">
+                                    <div class="step-icon-circle">📝</div>
+                                    <h3>Discharge Summary & ICD</h3>
+                                    <p>NABH-compliant draft with ICD codes ready in minutes.</p>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="step-card">
+                                    <div class="step-icon-circle">👨‍⚕️</div>
+                                    <h3>Doctor Review & Finalise</h3>
+                                    <p>Drafts reviewed and approved by doctors in < 10 mins.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slide-footer">
+                            <button class="btn-secondary" onclick="goToSlide(3)">
+                                Back
+                            </button>
+                            <button class="btn-primary-lg" onclick="goToSlide(5)">
+                                See Impact →
+                            </button>
+                        </div>
+
+                        <div class="branded-footer-bar">
+                            <div class="footer-logo">
+                                <span style="font-weight: 700; opacity: 0.9;">Patient Lens AI</span>
+                            </div>
+                            <div class="footer-contact">
+                                info@PatientLensAi.com
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SLIDE 6: DEPLOYMENTS -->
+                    <section class="slide" id="slide-5">
+                        <div class="deployments-slide">
+                            <div class="icon" style="font-size: 3rem; margin-bottom: 1rem;">🏥</div>
+                            <div class="deployment-stat">50+</div>
+                            <div class="deployment-label">Hospitals Deployed</div>
+
+                            <div class="trusted-badge">
+                                <span>✅ Trusted by Industry Leaders</span>
+                            </div>
+
+                            <div class="slide-footer"
+                                style="width: 100%; justify-content: center; margin-top: 3rem; border: none;">
+                                <button class="btn-secondary" onclick="goToSlide(4)">
+                                    Back
+                                </button>
+                                <button class="btn-primary-lg" onclick="location.reload()">
+                                    Restart Demo ↻
+                                </button>
+                            </div>
                         </div>
                     </section>
                 </div>
