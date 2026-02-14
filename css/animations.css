@@ -79,11 +79,11 @@
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(0, 105, 92, 0.4);
+        box-shadow: 0 0 0 0 rgba(255, 93, 49, 0.4);
     }
 
     50% {
-        box-shadow: 0 0 20px 6px rgba(0, 105, 92, 0.15);
+        box-shadow: 0 0 20px 6px rgba(255, 93, 49, 0.15);
     }
 }
 
@@ -318,13 +318,13 @@
 .btn-primary-lg:hover {
     transform: translateY(-2px);
     box-shadow:
-        0 4px 15px rgba(0, 105, 92, 0.35),
-        0 0 30px rgba(29, 233, 182, 0.15);
+        0 8px 25px rgba(0, 133, 106, 0.3),
+        0 0 30px rgba(255, 93, 49, 0.15);
 }
 
 .btn-primary-lg:active {
     transform: translateY(0) scale(0.97);
-    box-shadow: 0 2px 8px rgba(0, 105, 92, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 133, 106, 0.25);
 }
 
 .btn-secondary:hover {
@@ -619,7 +619,7 @@
     position: absolute;
     inset: -4px;
     border-radius: 8px;
-    background: rgba(29, 233, 182, 0.2);
+    background: rgba(255, 93, 49, 0.2);
     animation: fadeInScale 0.3s ease-out forwards;
     pointer-events: none;
     z-index: -1;
@@ -775,6 +775,65 @@
     .financial-outcome-panel .summary-metric {
         animation-delay: 0.1s !important;
     }
+}
+
+/* ── NEW MICRO-INTERACTIONS ───────────────────────────── */
+
+/* Smooth input focus animation */
+.input-group input,
+.input-group select {
+    animation: fadeInScale 0.3s ease-out;
+}
+
+/* Input focus glow */
+.input-group input:focus,
+.input-group select:focus {
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Staggered card entrance */
+.info-card:nth-child(1) { animation-delay: 0.1s; }
+.info-card:nth-child(2) { animation-delay: 0.2s; }
+.info-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Step card hover glow */
+.step-card {
+    animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.step-card:nth-child(1) { animation-delay: 0.1s; }
+.step-card:nth-child(2) { animation-delay: 0.2s; }
+.step-card:nth-child(3) { animation-delay: 0.3s; }
+.step-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Logo pulse on load */
+.logo-img {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+/* Dashboard value update flash */
+.dashboard-panel .summary-metric-value {
+    transition: all 0.3s ease;
+}
+
+.dashboard-panel .summary-metric-value.updating {
+    animation: tickerUp 0.4s ease-out;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom selection color */
+::selection {
+    background: rgba(0, 133, 106, 0.2);
+    color: var(--text-main);
+}
+
+/* Link hover effect */
+a {
+    transition: color 0.2s ease;
 }
 
 /* ── PREFERS REDUCED MOTION ───────────────────────────── */
