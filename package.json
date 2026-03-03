@@ -1,14 +1,13 @@
 {
   "name": "pla-calculator-pitch",
-  "module": "index.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --hot index.ts",
-    "start": "bun index.ts",
-    "build": "bun build index.ts --outdir=dist"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "vite": "^6.3.5"
   }
 }
